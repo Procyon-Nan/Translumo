@@ -16,7 +16,6 @@ using Translumo.Infrastructure.Constants;
 using Translumo.Infrastructure.Dispatching;
 using Translumo.Infrastructure.Encryption;
 using Translumo.Infrastructure.Language;
-using Translumo.Infrastructure.Python;
 using Translumo.Logging;
 using Translumo.MVVM.Models;
 using Translumo.MVVM.ViewModels;
@@ -144,8 +143,6 @@ namespace Translumo
             services.AddSingleton<UpdateManager>();
             services.AddSingleton<IReleasesClient, GithubApiClient>(provider => new GithubApiClient("Procyon-Nan", "Translumo"));
             services.AddSingleton<ICapturerFactory, ScreenCapturerFactory>();
-            services.AddSingleton<PythonEngineWrapper>();
-
             services.AddTransient<IProcessingService, TranslationProcessingService>();
             services.AddTransient<AiTextRecognitionService>();
             services.AddTransient<ScreenshotArchiveService>();
