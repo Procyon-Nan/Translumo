@@ -14,8 +14,11 @@ namespace Translumo.Services
     {
         public int CaptureAttempts { get; set; } = 3;
         public int AttemptDelayMs { get; set; } = 300;
+        public RectangleF CaptureArea => _configuration.CaptureArea;
 
         private int _height;
+        private int _left;
+        private int _top;
         private int _width;
 
         private readonly ScreenCaptureConfiguration _configuration;
@@ -27,6 +30,8 @@ namespace Translumo.Services
 
         public void Initialize()
         {
+            _left = Win32Interfaces.GetSystemMetrics(SystemMetricTypes.SM_XVIRTUALSCREEN);
+            _top = Win32Interfaces.GetSystemMetrics(SystemMetricTypes.SM_YVIRTUALSCREEN);
             _width = Win32Interfaces.GetSystemMetrics(SystemMetricTypes.SM_CXVIRTUALSCREEN);
             _height = Win32Interfaces.GetSystemMetrics(SystemMetricTypes.SM_CYVIRTUALSCREEN);
         }
@@ -63,11 +68,12 @@ namespace Translumo.Services
                 hdcDest = Win32Interfaces.CreateCompatibleDC(hdcSrc);
                 hBitmap = Win32Interfaces.CreateCompatibleBitmap(hdcSrc, _width, _height);
                 var hOld = Win32Interfaces.SelectObject(hdcDest, hBitmap);
-                Win32Interfaces.BitBlt(hdcDest, 0, 0, _width, _height, hdcSrc, 0, 0, TernaryRasterOperations.SRCCOPY);
+                Win32Interfaces.BitBlt(hdcDest, 0, 0, _width, _height, hdcSrc, _left, _top,
+                    TernaryRasterOperations.SRCCOPY | TernaryRasterOperations.CAPTUREBLT);
                 Win32Interfaces.SelectObject(hdcDest, hOld);
 
                 using var img = Image.FromHbitmap(hBitmap);
-                using var bitmap = img.Clone(captureArea, PixelFormat.Format32bppArgb);
+                using var bitmap = img.Clone(GetBitmapRelativeArea(captureArea), PixelFormat.Format32bppArgb);
 
                 return bitmap.ToBytes(ImageFormat.Tiff);
             }
@@ -99,6 +105,21 @@ namespace Translumo.Services
                     Win32Interfaces.DeleteObject(hBitmap);
                 }
             }
+        }
+
+        private RectangleF GetBitmapRelativeArea(RectangleF captureArea)
+        {
+            var left = Math.Max(0, captureArea.Left - _left);
+            var top = Math.Max(0, captureArea.Top - _top);
+            var right = Math.Min(_width, captureArea.Right - _left);
+            var bottom = Math.Min(_height, captureArea.Bottom - _top);
+
+            if (right <= left || bottom <= top)
+            {
+                throw new CaptureException($"Capture area is outside the virtual screen ({captureArea})");
+            }
+
+            return new RectangleF(left, top, right - left, bottom - top);
         }
     }
 }

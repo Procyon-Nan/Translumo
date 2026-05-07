@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
-using OpenCvSharp;
-using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,8 +13,8 @@ using Translumo.Dialog.Stages;
 using Translumo.Infrastructure.Language;
 using Translumo.MVVM.Common;
 using Translumo.MVVM.Models;
-using Translumo.OCR.Configuration;
-using Translumo.OCR.WindowsOCR;
+using Translumo.Translation;
+using Translumo.Translation.AI;
 using Translumo.Translation.Configuration;
 using Translumo.TTS;
 using Translumo.Utils;
@@ -32,6 +30,7 @@ namespace Translumo.MVVM.ViewModels
 
         public IList<DisplayLanguage> AvailableLanguages { get; set; }
         public IList<DisplayLanguage> AvailableTranslationLanguages { get; set; }
+        public IList<Translators> AvailableTranslators { get; set; }
 
         public TranslationConfiguration Model { get; set; }
 
@@ -67,6 +66,72 @@ namespace Translumo.MVVM.ViewModels
 
         public bool IsTtsEnabled => TtsSettings.TtsSystem != TTSEngines.None;
 
+        public bool IsAiTranslatorSelected => Translator == Translators.AI;
+
+        public bool IsLegacyTranslatorSelected => Translator != Translators.AI;
+
+        public ObservableCollection<string> AiOcrModels
+        {
+            get => _aiOcrModels;
+            set
+            {
+                SetProperty(ref _aiOcrModels, value);
+            }
+        }
+
+        public string AiOcrModelsStatus
+        {
+            get => _aiOcrModelsStatus;
+            set
+            {
+                SetProperty(ref _aiOcrModelsStatus, value);
+            }
+        }
+
+        public ObservableCollection<string> AiTranslationModels
+        {
+            get => _aiTranslationModels;
+            set
+            {
+                SetProperty(ref _aiTranslationModels, value);
+            }
+        }
+
+        public string AiTranslationModelsStatus
+        {
+            get => _aiTranslationModelsStatus;
+            set
+            {
+                SetProperty(ref _aiTranslationModelsStatus, value);
+            }
+        }
+
+        public DisplayLanguage SelectedAiPromptLanguage
+        {
+            get => _selectedAiPromptLanguage;
+            set
+            {
+                SetProperty(ref _selectedAiPromptLanguage, value);
+                OnPropertyChanged(nameof(AiPromptOverrideText));
+            }
+        }
+
+        public string AiPromptOverrideText
+        {
+            get
+            {
+                return SelectedAiPromptLanguage == null
+                    ? string.Empty
+                    : Model.GetAiPromptOverride(SelectedAiPromptLanguage.LanguageDescriptor.Language);
+            }
+            set
+            {
+                if (SelectedAiPromptLanguage != null)
+                {
+                    Model.SetAiPromptOverride(SelectedAiPromptLanguage.LanguageDescriptor.Language, value);
+                }
+            }
+        }
 
         public ObservableCollection<ProxyCardItem> ProxyCollection
         {
@@ -104,6 +169,28 @@ namespace Translumo.MVVM.ViewModels
             }
         }
 
+        public Translators Translator
+        {
+            get => Model.Translator;
+            set
+            {
+                if (Model.Translator == value)
+                {
+                    return;
+                }
+
+                Model.Translator = value;
+                if (value == Translators.AI)
+                {
+                    ProxySettingsIsOpened = false;
+                }
+
+                OnPropertyChanged(nameof(Translator));
+                OnPropertyChanged(nameof(IsAiTranslatorSelected));
+                OnPropertyChanged(nameof(IsLegacyTranslatorSelected));
+            }
+        }
+
         public TTSEngines TtsSystem
         {
             get => TtsSettings.TtsSystem;
@@ -117,17 +204,27 @@ namespace Translumo.MVVM.ViewModels
         public ICommand ProxyItemDeletedCommand => new RelayCommand<ProxyCardItem>(OnProxyItemDeletedCommand);
         public ICommand ProxyItemAddCommand => new RelayCommand(OnProxyItemAddCommand);
         public ICommand ProxySettingsSubmitCommand => new RelayCommand<bool>(OnProxySettingsSubmit);
+        public ICommand LoadAiOcrModelsCommand => new RelayCommand(async () => await LoadAiOcrModelsAsync());
+        public ICommand LoadAiTranslationModelsCommand => new RelayCommand(async () => await LoadAiTranslationModelsAsync());
+        public ICommand ResetAiOcrPromptCommand => new RelayCommand(OnResetAiOcrPrompt);
+        public ICommand ResetAiDefaultPromptCommand => new RelayCommand(OnResetAiDefaultPrompt);
+        public ICommand ClearAiPromptOverrideCommand => new RelayCommand(OnClearAiPromptOverride);
 
         private ObservableCollection<ProxyCardItem> _proxyCollection;
+        private ObservableCollection<string> _aiOcrModels;
+        private ObservableCollection<string> _aiTranslationModels;
+        private string _aiOcrModelsStatus;
+        private string _aiTranslationModelsStatus;
+        private DisplayLanguage _selectedAiPromptLanguage;
         private bool _proxySettingsIsOpened;
 
         private readonly DialogService _dialogService;
-        private readonly OcrGeneralConfiguration _ocrConfiguration;
         private readonly LanguageService _languageService;
+        private readonly OpenAiCompatibleClient _aiClient;
         private readonly ILogger _logger;
 
         public LanguagesSettingsViewModel(LanguageService languageService, TranslationConfiguration translationConfiguration,
-            OcrGeneralConfiguration ocrConfiguration, TtsConfiguration ttsConfiguration, DialogService dialogService,
+            TtsConfiguration ttsConfiguration, DialogService dialogService,
             ILogger<LanguagesSettingsViewModel> logger)
         {
             var languages = languageService.GetAll(true)
@@ -143,10 +240,24 @@ namespace Translumo.MVVM.ViewModels
                 .OrderBy(lang => lang.Item2.DisplayName)
                 .Select(lang => lang.Item2)
                 .ToList();
-
+            this.AvailableTranslators = new[]
+            {
+                Translators.AI,
+                Translators.Deepl,
+                Translators.Yandex,
+                Translators.Google,
+                Translators.Papago
+            };
             this.Model = translationConfiguration;
             this.TtsSettings = ttsConfiguration;
             this.TtsSettings.TtsLanguage = this.Model.TranslateToLang;
+            this.SelectedAiPromptLanguage = this.AvailableTranslationLanguages.FirstOrDefault(lang =>
+                lang.LanguageDescriptor.Language == this.Model.TranslateToLang);
+            this.AiOcrModels = new ObservableCollection<string>();
+            this.AiTranslationModels = new ObservableCollection<string>();
+            InitializeAiModels();
+            this.AiOcrModelsStatus = string.Empty;
+            this.AiTranslationModelsStatus = string.Empty;
 
             this.AvailableVoices = new ObservableCollection<VoiceInfo>();
             
@@ -158,8 +269,8 @@ namespace Translumo.MVVM.ViewModels
 
             this._languageService = languageService;
             this._dialogService = dialogService;
-            this._ocrConfiguration = ocrConfiguration;
             this._logger = logger;
+            this._aiClient = new OpenAiCompatibleClient(logger);
         }
 
         private void LoadAvailableVoices(string languageCode)
@@ -252,18 +363,118 @@ namespace Translumo.MVVM.ViewModels
             ProxySettingsIsOpened = false;
         }
 
+        private void OnResetAiOcrPrompt()
+        {
+            Model.AiOcrSystemPrompt = TranslationConfiguration.DefaultAiOcrSystemPromptTemplate;
+        }
+
+        private void OnResetAiDefaultPrompt()
+        {
+            Model.AiDefaultSystemPrompt = TranslationConfiguration.DefaultAiSystemPromptTemplate;
+        }
+
+        private void OnClearAiPromptOverride()
+        {
+            if (SelectedAiPromptLanguage == null)
+            {
+                return;
+            }
+
+            Model.SetAiPromptOverride(SelectedAiPromptLanguage.LanguageDescriptor.Language, string.Empty);
+            OnPropertyChanged(nameof(AiPromptOverrideText));
+        }
+
+        private Task LoadAiOcrModelsAsync()
+        {
+            return LoadAiModelsAsync(
+                Model.AiOcrBaseUrl,
+                Model.AiOcrApiKey,
+                Model.AiOcrModel,
+                Model.AiOcrRequestTimeoutSeconds,
+                models => AiOcrModels = models,
+                status => AiOcrModelsStatus = status,
+                nameof(AiOcrModels),
+                model => Model.AiOcrModel = model,
+                "Str.AiSettings.LoadingOcrModels",
+                "Str.AiSettings.OcrModelsLoaded",
+                "Failed to load AI OCR models");
+        }
+
+        private Task LoadAiTranslationModelsAsync()
+        {
+            return LoadAiModelsAsync(
+                Model.AiTranslationBaseUrl,
+                Model.AiTranslationApiKey,
+                Model.AiTranslationModel,
+                Model.AiTranslationRequestTimeoutSeconds,
+                models => AiTranslationModels = models,
+                status => AiTranslationModelsStatus = status,
+                nameof(AiTranslationModels),
+                model => Model.AiTranslationModel = model,
+                "Str.AiSettings.LoadingTranslationModels",
+                "Str.AiSettings.TranslationModelsLoaded",
+                "Failed to load AI translation models");
+        }
+
+        private async Task LoadAiModelsAsync(
+            string baseUrl,
+            string apiKey,
+            string selectedModel,
+            int timeoutSeconds,
+            Action<ObservableCollection<string>> setModels,
+            Action<string> setStatus,
+            string modelsPropertyName,
+            Action<string> setSelectedModel,
+            string loadingLocalizationKey,
+            string loadedLocalizationKey,
+            string logMessage)
+        {
+            try
+            {
+                setStatus(LocalizationManager.GetValue(loadingLocalizationKey));
+                var models = await _aiClient.GetModelsAsync(baseUrl, apiKey, timeoutSeconds).ConfigureAwait(true);
+
+                var loadedModels = new ObservableCollection<string>(models);
+                if (!string.IsNullOrWhiteSpace(selectedModel) && !loadedModels.Contains(selectedModel))
+                {
+                    loadedModels.Insert(0, selectedModel);
+                }
+
+                setModels(loadedModels);
+                if (loadedModels.Count > 0 && string.IsNullOrWhiteSpace(selectedModel))
+                {
+                    setSelectedModel(loadedModels[0]);
+                }
+
+                setStatus(string.Format(LocalizationManager.GetValue(loadedLocalizationKey), loadedModels.Count));
+                OnPropertyChanged(modelsPropertyName);
+            }
+            catch (Exception ex)
+            {
+                setStatus(ex.Message);
+                _logger.LogError(ex, logMessage);
+            }
+        }
+
+        private void InitializeAiModels()
+        {
+            if (!string.IsNullOrWhiteSpace(Model.AiOcrModel))
+            {
+                AiOcrModels.Add(Model.AiOcrModel);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Model.AiTranslationModel))
+            {
+                AiTranslationModels.Add(Model.AiTranslationModel);
+            }
+        }
+
         private async Task ChangeSourceLanguage(Languages language)
         {
             try
             {
                 var changeLangStage = StagesFactory.CreateLanguageChangeStages(_dialogService, () => Model.TranslateFromLang = language,
                     _logger);
-
-                if (_ocrConfiguration.GetConfiguration<WindowsOCRConfiguration>().Enabled)
-                {
-                    var langCode = _languageService.GetLanguageDescriptor(language).Code;
-                    changeLangStage = StagesFactory.CreateWindowsOcrCheckingStages(_dialogService, langCode, changeLangStage, _logger);
-                }
 
                 await changeLangStage.ExecuteAsync();
             }
@@ -281,12 +492,16 @@ namespace Translumo.MVVM.ViewModels
             {
                 this.TtsSettings.TtsLanguage = language;
                 this.Model.TranslateToLang = language;
+                this.SelectedAiPromptLanguage = this.AvailableTranslationLanguages.FirstOrDefault(lang =>
+                    lang.LanguageDescriptor.Language == language);
                 
                 if (TtsSettings.TtsSystem == TTSEngines.WindowsTTS)
                 {
                     var langCode = _languageService.GetLanguageDescriptor(language).Code;
                     LoadAvailableVoices(langCode);
                 }
+
+                OnPropertyChanged(nameof(AiPromptOverrideText));
             };
 
             await this.ReconfigureTts(language, TtsSettings.TtsSystem, changeLanguageAction);
@@ -362,8 +577,12 @@ namespace Translumo.MVVM.ViewModels
 
         private void OnLocalizedValueChanged(string key, string oldValue)
         {
-            var availableLang = AvailableTranslationLanguages.First(lang => lang.DisplayName == oldValue);
-            availableLang.DisplayName = LocalizationManager.GetValue(key, false, OnLocalizedValueChanged, this);
+            var availableLang = AvailableTranslationLanguages.FirstOrDefault(lang => lang.DisplayName == oldValue);
+            if (availableLang != null)
+            {
+                availableLang.DisplayName = LocalizationManager.GetValue(key, false, OnLocalizedValueChanged, this);
+                return;
+            }
         }
 
         private void InitializeProxyCollection()

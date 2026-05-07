@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Translumo.Infrastructure.Dispatching;
 using Translumo.Infrastructure.Language;
+using Translumo.Translation.AI;
 using Translumo.Translation.Configuration;
 using Translumo.Translation.Deepl;
 using Translumo.Translation.Google;
@@ -27,6 +28,8 @@ namespace Translumo.Translation
         {
             switch (translatorConfiguration.Translator)
             {
+                case Translators.AI:
+                    return new AiTranslator(translatorConfiguration, _languageService, _logger);
                 case Translators.Deepl:
                     return new DeepLTranslator(translatorConfiguration, _languageService, _logger);
                 case Translators.Yandex:

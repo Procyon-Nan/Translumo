@@ -34,7 +34,7 @@ namespace Translumo.Utils
         {
             using (var ms = new MemoryStream())
             {
-                bitmap.Save(ms, ImageFormat.Tiff);
+                bitmap.Save(ms, imgFormat);
                 return ms.ToArray();
             }
         }

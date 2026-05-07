@@ -24,6 +24,11 @@
         MouseDown="Grid_MouseDown"
         MouseMove="Grid_MouseMove"
         MouseUp="Grid_MouseUp">
+        <Image
+            x:Name="frozenScreenshotImage"
+            IsHitTestVisible="False"
+            Stretch="Fill"
+            Visibility="Collapsed" />
         <Canvas>
             <Rectangle
                 x:Name="selectionBox"

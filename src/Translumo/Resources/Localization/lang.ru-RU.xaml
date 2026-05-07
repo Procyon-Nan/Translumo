@@ -24,6 +24,12 @@
 
     <!--  Chat  -->
     <system:String x:Key="Str.Chat.SettingsOpened">Закройте окно настроек чтобы начать перевод</system:String>
+    <system:String x:Key="Str.Chat.CaptureAreaNotSelected">Сначала выберите область экрана</system:String>
+    <system:String x:Key="Str.Chat.SingleTranslationBusy">Однократный перевод уже выполняется.</system:String>
+    <system:String x:Key="Str.Chat.CapturerInitFailed">Не удалось инициализировать захват экрана. Проверьте журнал.</system:String>
+    <system:String x:Key="Str.Chat.CaptureFailedTemplate">Не удалось захватить экран: {0}</system:String>
+    <system:String x:Key="Str.Chat.FrozenCaptureFailedTemplate">Не удалось зафиксировать экран: {0}</system:String>
+    <system:String x:Key="Str.Chat.ProcessingFailedTemplate">Ошибка обработки: {0}</system:String>
     <system:String x:Key="Str.Chat.WindowLocked">Окно перевода заблокировано</system:String>
     <system:String x:Key="Str.Chat.WindowUnlocked">Окно перевода разблокировано</system:String>
 
@@ -32,19 +38,40 @@
     <system:String x:Key="Str.LangSettings.TranslationLang">Язык перевода</system:String>
     <system:String x:Key="Str.LangSettings.Translator">Переводчик</system:String>
     <system:String x:Key="Str.LangSettings.TtsSystem">Синтез речи (TTS)</system:String>
+    <system:String x:Key="Str.AiSettings.Title">AI распознавание и перевод</system:String>
+    <system:String x:Key="Str.AiSettings.Note">AI сначала распознаёт текст на скриншоте, а затем передаёт его переводчику. Используйте OpenAI-совместимый API. Base URL должен включать путь версии, например https://api.example.com/v1.</system:String>
+    <system:String x:Key="Str.AiSettings.OcrSection">AI распознавание текста</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationSection">AI перевод текста</system:String>
+    <system:String x:Key="Str.AiSettings.BaseUrl">Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.ApiKey">API key</system:String>
+    <system:String x:Key="Str.AiSettings.Model">Model</system:String>
+    <system:String x:Key="Str.AiSettings.OcrBaseUrl">OCR Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.OcrApiKey">OCR API key</system:String>
+    <system:String x:Key="Str.AiSettings.OcrModel">OCR model</system:String>
+    <system:String x:Key="Str.AiSettings.OcrTimeoutSeconds">Таймаут OCR запроса (сек.)</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationBaseUrl">Translation Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationApiKey">Translation API key</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationModel">Translation model</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationTimeoutSeconds">Таймаут запроса перевода (сек.)</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingModels">Loading models...</system:String>
+    <system:String x:Key="Str.AiSettings.ModelsLoaded">Loaded {0} model(s).</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingOcrModels">Loading OCR models...</system:String>
+    <system:String x:Key="Str.AiSettings.OcrModelsLoaded">Loaded {0} OCR model(s).</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingTranslationModels">Loading translation models...</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationModelsLoaded">Loaded {0} translation model(s).</system:String>
+    <system:String x:Key="Str.AiSettings.OcrPrompt">Prompt for image text recognition</system:String>
+    <system:String x:Key="Str.AiSettings.DefaultPrompt">Translation system prompt</system:String>
+    <system:String x:Key="Str.AiSettings.PromptOverrideLang">Override target language</system:String>
+    <system:String x:Key="Str.AiSettings.PromptOverride">Language override prompt</system:String>
 
     <!--  Hotkeys descriptions  -->
     <system:String x:Key="Str.Hotkeys.ChatVisibility">Показать/скрыть окно перевода</system:String>
     <system:String x:Key="Str.Hotkeys.SettingsVisibility">Показать/закрыть окно настроек</system:String>
-    <system:String x:Key="Str.Hotkeys.SelectArea">Выбрать область перевода</system:String>
-    <system:String x:Key="Str.Hotkeys.OnOffTranslation">Включить/выключить перевод</system:String>
-    <system:String x:Key="Str.Hotkeys.ShowSelectArea">Показать выбранную область перевода</system:String>
     <system:String x:Key="Str.Hotkeys.OnceTranslate">Выбрать область и перевести текст один раз</system:String>
     <system:String x:Key="Str.Hotkeys.WindowChangeStyle">Заблокировать/разблокировать окно перевода</system:String>
     <system:String x:Key="Str.Hotkeys.SettingsShowHelp">Нажмите '{0}' чтобы открыть настройки</system:String>
-    <system:String x:Key="Str.Hotkeys.SelectAreaHelp">Нажмите '{0}' чтобы выбрать область захвата текста</system:String>
-    <system:String x:Key="Str.Hotkeys.OnTranslationHelp">Нажмите '{0}' чтобы начать перевод</system:String>
-    <system:String x:Key="Str.Hotkeys.GeneralHelp">Для управления приложением вы можете использовать контекстное меню из трея или горячие клавиши:</system:String>
+    <system:String x:Key="Str.Hotkeys.OnceTranslateHelp">Нажмите '{0}' чтобы выбрать область и перевести один раз</system:String>
+    <system:String x:Key="Str.Hotkeys.GeneralHelp">Перевод запускается вручную:</system:String>
 
     <!--  Appearance settings  -->
     <system:String x:Key="Str.AppearanceSettings.WindowColor">Цвет окна</system:String>
@@ -95,6 +122,17 @@
     <system:String x:Key="Str.Navigation.Appearance">Внешний вид</system:String>
     <system:String x:Key="Str.Navigation.Ocr">Распознавание текста</system:String>
     <system:String x:Key="Str.Navigation.HotKeys">Горячие клавиши</system:String>
+    <system:String x:Key="Str.Navigation.Logs">Журнал</system:String>
+
+    <!--  Log settings  -->
+    <system:String x:Key="Str.LogSettings.Search">Поиск</system:String>
+    <system:String x:Key="Str.LogSettings.Level">Уровень</system:String>
+    <system:String x:Key="Str.LogSettings.LevelAll">Все</system:String>
+    <system:String x:Key="Str.LogSettings.Time">Время</system:String>
+    <system:String x:Key="Str.LogSettings.Source">Источник</system:String>
+    <system:String x:Key="Str.LogSettings.Message">Сообщение</system:String>
+    <system:String x:Key="Str.LogSettings.CopySelected">Копировать</system:String>
+    <system:String x:Key="Str.LogSettings.Clear">Очистить</system:String>
 
     <!--  Languages  -->
     <system:String x:Key="Str.Languages.English">Английский</system:String>
@@ -156,10 +194,10 @@
 
     <!--  Buttons  -->
     <system:String x:Key="Str.Button.SettingProxy">Настроить прокси</system:String>
+    <system:String x:Key="Str.Button.GetAiModels">Get models</system:String>
+    <system:String x:Key="Str.Button.ResetDefault">Сбросить</system:String>
+    <system:String x:Key="Str.Button.ClearPromptOverride">Очистить переопределение</system:String>
     <system:String x:Key="Str.Button.ShowText">Показать пример текста</system:String>
     <system:String x:Key="Str.Button.Apply">Применить</system:String>
-
-    <system:String x:Key="Str.Lookupper.ProjectNote">Мой главный проект:</system:String>
-    <system:String x:Key="Str.Lookupper.Url">https://lookupper.ru</system:String>
 
 </ResourceDictionary>

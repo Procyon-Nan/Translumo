@@ -7,6 +7,8 @@ namespace Translumo.Processing.Interfaces
     {
         int CaptureAttempts { get; set; }
 
+        RectangleF CaptureArea { get; }
+
         void Initialize();
         byte[] CaptureScreen();
         byte[] CaptureScreen(RectangleF captureArea);

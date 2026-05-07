@@ -8,6 +8,28 @@
 
 <p align="center"><strong>English</strong> | <a href="docs/README-RU.md"><strong>Русский</strong></a></p>
 
+## Secondary Development Notice
+
+This repository is a secondary development fork based on the original **[Translumo](https://github.com/ramjke/Translumo)** project by **ramjke** and its contributors. The original project ownership, copyright, license, and credit remain with the original author and contributors.
+
+The changes in this fork focus on AI-based text recognition and OpenAI-compatible translation workflows, including separate AI OCR/translation configuration, frozen screenshot selection, runtime diagnostics, logging, and Chinese localization improvements.
+
+## Changes in This Fork
+
+- Replaced the local OCR workflow with AI image text recognition through OpenAI-compatible Chat Completions APIs.
+- Split AI OCR and AI translation into separate Base URL, API key, model, timeout, and prompt settings.
+- Kept legacy translators available, while AI translation can be selected as the primary translator.
+- Simplified translation to a single manual workflow: press **Shift+F**, freeze the current screen, select an area on the frozen image, then run OCR and translation once.
+- Added screenshot diagnostics under the system temp directory, runtime logs in Settings, Chinese localization, and prompt reset controls.
+
+## How to Use This Fork
+
+1. Open Settings with **Alt+G**.
+2. In language/translation settings, configure source language, target language, AI text recognition, and AI translation.
+3. Fill the OpenAI-compatible Base URL, API key, and model separately for OCR and translation.
+4. Press **Shift+F** while the desired text is visible. Translumo freezes the current mouse screen first, then lets you select an area on that frozen image.
+5. The selected crop is sent to AI OCR. The recognized text is then sent to the selected translator.
+
 ## Sibling Project
 This project has a sibling called **[Lookupper](https://lookupper.com)** — an on-screen dictionary for language learning. It is similar to Translumo but built for a different purpose. Lookupper is built to help you *learn* a language, not just depend on a translator forever.
 

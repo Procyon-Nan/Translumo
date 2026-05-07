@@ -30,20 +30,24 @@ namespace Translumo.Utils
 
         static LocalizationManager()
         {
-            Thread.CurrentThread.CurrentUICulture = AvailableLocalizations.First(lang => lang.Name == "en-US");
+            Thread.CurrentThread.CurrentUICulture = GetSupportedCultureOrDefault(CultureInfo.CurrentUICulture);
             ChangedValueCallbacks = new Dictionary<string, CallbackContext>();
+        }
+
+        public static string GetDefaultCultureName()
+        {
+            return GetSupportedCultureOrDefault(CultureInfo.CurrentUICulture).Name;
         }
 
 
         public static string GetValue(string key, bool lineBreakReplacement = false, Action<string, string> changeValueCallback = null, object caller = null)
         {
-            string value = null;
+            string value = Application.Current.TryFindResource(key) as string;
             if (lineBreakReplacement)
             {
-                value = (Application.Current.TryFindResource(key) as string)?.Replace("&#13;", "\n");
+                value = value?.Replace("&#13;", "\n");
             }
 
-            value = Application.Current.TryFindResource(key) as string;
             if (changeValueCallback != null)
             {
                 ChangedValueCallbacks[key] = new CallbackContext() { Callback = changeValueCallback, Caller = caller, Value = value };
@@ -88,6 +92,24 @@ namespace Translumo.Utils
             var toRemove = ChangedValueCallbacks.Where(ctx => ctx.Value.Caller == caller).ToArray();
             
             toRemove.ForEach(item => ChangedValueCallbacks.Remove(item));
+        }
+
+        private static CultureInfo GetSupportedCultureOrDefault(CultureInfo cultureInfo)
+        {
+            var supportedCulture = AvailableLocalizations.FirstOrDefault(lang => lang.Name == cultureInfo.Name);
+            if (supportedCulture != null)
+            {
+                return supportedCulture;
+            }
+
+            supportedCulture = AvailableLocalizations.FirstOrDefault(lang =>
+                lang.TwoLetterISOLanguageName == cultureInfo.TwoLetterISOLanguageName);
+            if (supportedCulture != null)
+            {
+                return supportedCulture;
+            }
+
+            return AvailableLocalizations.First(lang => lang.Name == "en-US");
         }
 
 

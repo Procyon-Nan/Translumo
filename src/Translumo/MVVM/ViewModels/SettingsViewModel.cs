@@ -40,21 +40,25 @@ namespace Translumo.MVVM.ViewModels
         private object _selectedViewModel;
         private bool _additionalPanelOpened;
 
-        public SettingsViewModel(DialogService dialogService, AppearanceSettingsViewModel appearanceVm, OcrSettingsViewModel ocrVm, 
-            LanguagesSettingsViewModel languagesVm, HotkeysSettingsViewModel hotkeysVm, SystemConfiguration systemConfiguration, ILogger<SettingsViewModel> logger)
+        private readonly LogSettingsViewModel _logSettingsViewModel;
+
+        public SettingsViewModel(DialogService dialogService, AppearanceSettingsViewModel appearanceVm,
+            LanguagesSettingsViewModel languagesVm, HotkeysSettingsViewModel hotkeysVm, LogSettingsViewModel logSettingsVm,
+            SystemConfiguration systemConfiguration, ILogger<SettingsViewModel> logger)
         {
             this.NavigationItems = new ObservableCollection<BaseNavigationItem>();
             this.DialogService = dialogService;
             this.SystemConfiguration = systemConfiguration;
             this.AvailableLanguages = LocalizationManager.AvailableLocalizations.ToArray();
+            this._logSettingsViewModel = logSettingsVm;
 
             appearanceVm.PanelStateIsChanged += AppearanceVmOnPanelStateIsChanged;
             languagesVm.PanelStateIsChanged += AppearanceVmOnPanelStateIsChanged;
 
             AddNavigationItem(LocalizationManager.GetValue("Str.Navigation.Languages", false, OnLocalizedValueChanged, this), PackIconKind.Language, languagesVm);
             AddNavigationItem(LocalizationManager.GetValue("Str.Navigation.Appearance", false, OnLocalizedValueChanged, this), PackIconKind.PaletteOutline, appearanceVm);
-            AddNavigationItem(LocalizationManager.GetValue("Str.Navigation.Ocr", false, OnLocalizedValueChanged, this), PackIconKind.Ocr, ocrVm);
             AddNavigationItem(LocalizationManager.GetValue("Str.Navigation.HotKeys", false, OnLocalizedValueChanged, this), PackIconKind.KeyboardSettingsOutline, hotkeysVm);
+            AddNavigationItem(LocalizationManager.GetValue("Str.Navigation.Logs", false, OnLocalizedValueChanged, this), PackIconKind.FileDocumentOutline, logSettingsVm);
         }
 
         private void OnLocalizedValueChanged(string key, string oldValue)
@@ -97,6 +101,7 @@ namespace Translumo.MVVM.ViewModels
 
         public void Dispose()
         {
+            _logSettingsViewModel.Dispose();
             LocalizationManager.ReleaseChangedValuesCallbacks(this);
         }
     }

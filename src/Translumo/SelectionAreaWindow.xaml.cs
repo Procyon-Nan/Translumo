@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Color = System.Windows.Media.Color;
 using Point = System.Windows.Point;
 
 namespace Translumo
 {
+    public sealed class SelectionAreaWindowOptions
+    {
+        public byte[] ScreenshotBytes { get; set; }
+
+        public RectangleF ScreenBounds { get; set; }
+    }
+
     public partial class SelectionAreaWindow : Window
     {
         public Point MouseInitialPos { get; private set; }
@@ -19,6 +28,7 @@ namespace Translumo
         private Point _relativeInitialPos; // The point where the mouse button was clicked down.
 
         private readonly bool _readonlyMode = false;
+        private readonly RectangleF? _screenBounds;
 
         public SelectionAreaWindow()
         {
@@ -31,6 +41,23 @@ namespace Translumo
 
             this._readonlyMode = true;
             this.SelectedArea = rectangle;
+        }
+
+        public SelectionAreaWindow(SelectionAreaWindowOptions options)
+        {
+            InitializeComponent();
+
+            if (options == null)
+            {
+                return;
+            }
+
+            _screenBounds = options.ScreenBounds;
+            frozenScreenshotImage.Source = CreateBitmapImage(options.ScreenshotBytes);
+            frozenScreenshotImage.Visibility = Visibility.Visible;
+            Opacity = 1;
+            Background = System.Windows.Media.Brushes.Black;
+            ConfigureFrozenWindowBounds();
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -59,7 +86,7 @@ namespace Translumo
             selectionBox.Width = width;
             selectionBox.Height = height;
 
-            selectionBox.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            selectionBox.Fill = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
 
             // Make the drag selection box visible.
             selectionBox.Visibility = Visibility.Visible;
@@ -138,12 +165,48 @@ namespace Translumo
 
         private void SelectionAreaWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            ConfigureFrozenWindowBounds();
+
             if (!SelectedArea.IsEmpty && _readonlyMode)
             {
                 var leftUpperPoint = this.PointFromScreen(new Point(SelectedArea.X, SelectedArea.Y));
                 var rightBottomPoint = this.PointFromScreen(new Point(SelectedArea.Right, SelectedArea.Bottom));
                 DrawSelection(leftUpperPoint.X, leftUpperPoint.Y, rightBottomPoint.X - leftUpperPoint.X, rightBottomPoint.Y - leftUpperPoint.Y);
             }
+        }
+
+        private void ConfigureFrozenWindowBounds()
+        {
+            if (!_screenBounds.HasValue)
+            {
+                return;
+            }
+
+            var screenBounds = _screenBounds.Value;
+            var dpi = VisualTreeHelper.GetDpi(this);
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            WindowState = WindowState.Normal;
+            Left = screenBounds.Left / dpi.DpiScaleX;
+            Top = screenBounds.Top / dpi.DpiScaleY;
+            Width = screenBounds.Width / dpi.DpiScaleX;
+            Height = screenBounds.Height / dpi.DpiScaleY;
+        }
+
+        private static BitmapImage CreateBitmapImage(byte[] imageBytes)
+        {
+            if (imageBytes == null || imageBytes.Length == 0)
+            {
+                return null;
+            }
+
+            using var stream = new MemoryStream(imageBytes);
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.StreamSource = stream;
+            bitmap.EndInit();
+            bitmap.Freeze();
+            return bitmap;
         }
 
         private void SelectionAreaWindow_OnKeyDown(object sender, KeyEventArgs e)

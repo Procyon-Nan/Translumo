@@ -4,12 +4,6 @@ namespace Translumo.Processing
 {
     public interface IProcessingService
     {
-        bool IsStarted { get; }
-
-        void StartProcessing();
-
-        void ProcessOnce(RectangleF captureArea);
-
-        void StopProcessing();
+        void ProcessOnce(FrozenScreenCapture frozenCapture, RectangleF selectedArea);
     }
 }

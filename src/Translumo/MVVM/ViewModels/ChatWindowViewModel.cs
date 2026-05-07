@@ -10,6 +10,7 @@ using Translumo.Infrastructure;
 using Translumo.Infrastructure.Constants;
 using Translumo.Infrastructure.Dispatching;
 using Translumo.MVVM.Models;
+using Translumo.Processing;
 using Translumo.Services;
 using Translumo.Update;
 using Translumo.Utils;
@@ -38,9 +39,11 @@ namespace Translumo.MVVM.ViewModels
         private readonly ILogger _logger;
         private readonly HotKeysServiceManager _hotKeysServiceManager;
         private readonly UpdateManager _updateManager;
+        private readonly FrozenScreenCaptureService _frozenScreenCaptureService;
 
         public ChatWindowViewModel(ChatWindowModel model, HotKeysServiceManager hotKeysManager, ChatUITextMediator chatTextMediator, UpdateManager updateManager, 
-            IActionDispatcher dispatcher, DialogService dialogService, IServiceProvider serviceProvider, ILogger<ChatWindowViewModel> logger)
+            IActionDispatcher dispatcher, DialogService dialogService, IServiceProvider serviceProvider,
+            FrozenScreenCaptureService frozenScreenCaptureService, ILogger<ChatWindowViewModel> logger)
         {
             this.Model = model;
             this._logger = logger;
@@ -48,14 +51,12 @@ namespace Translumo.MVVM.ViewModels
             this._serviceProvider = serviceProvider;
             this._hotKeysServiceManager = hotKeysManager;
             this._updateManager = updateManager;
+            this._frozenScreenCaptureService = frozenScreenCaptureService;
 
             dispatcher.RegisterConsumer<BrowseSiteDispatchArg, BrowseSiteDispatchResult>(DispatcherActions.PASS_SITE, BrowseSiteHandler);
 
-            hotKeysManager.SelectAreaKeyPressed += HotKeysManagerOnSelectAreaKeyPressed;
-            hotKeysManager.TranslationStateKeyPressed += HotKeysManagerOnTranslationStateKeyPressed;
             hotKeysManager.ChatVisibilityKeyPressed += HotKeysManagerOnChatVisibilityKeyPressed;
             hotKeysManager.SettingVisibilityKeyPressed += HotKeysManagerOnSettingVisibilityKeyPressed;
-            hotKeysManager.ShowSelectionAreaKeyPressed += HotKeysManagerOnShowSelectionAreaKeyPressed;
             hotKeysManager.OnceTranslateKeyPressed += HotKeysManagerOnOnceTranslateKeyPressed;
             hotKeysManager.WindowStyleChangeKeyPressed += HotKeysManagerOnWindowStyleChangeKeyPressed;
             chatTextMediator.TextRaised += ChatTextMediatorOnTextRaised;
@@ -83,37 +84,6 @@ namespace Translumo.MVVM.ViewModels
             OnShowHideChat();
         }
 
-        private void HotKeysManagerOnTranslationStateKeyPressed(object sender, EventArgs e)
-        {
-            if (Model.TranslationIsRunning)
-            {
-                Model.EndTranslation();
-            }
-            else
-            {
-                StartTranslation(true);
-            }
-        }
-
-        private void HotKeysManagerOnSelectAreaKeyPressed(object sender, EventArgs e)
-        {
-            Model.EndTranslation();
-            
-            var result = _dialogService.ShowWindowDialog<SelectionAreaWindow>(out var window);
-            if (result.HasValue && result.Value)
-            {
-                Model.CaptureConfiguration.CaptureArea = window.SelectedArea;
-            }
-        }
-
-        private void HotKeysManagerOnShowSelectionAreaKeyPressed(object sender, EventArgs e)
-        {
-            if (!Model.CaptureConfiguration.CaptureArea.IsEmpty)
-            {
-                _dialogService.ShowWindowDialog<SelectionAreaWindow>(out _, Model.CaptureConfiguration.CaptureArea);
-            }
-        }
-
         private void HotKeysManagerOnOnceTranslateKeyPressed(object sender, EventArgs e)
         {
             if (_dialogService.WindowIsOpened<SettingsViewModel>())
@@ -123,10 +93,70 @@ namespace Translumo.MVVM.ViewModels
                 return;
             }
 
-            var result = _dialogService.ShowWindowDialog<SelectionAreaWindow>(out var window);
+            FrozenScreenCapture frozenCapture;
+            try
+            {
+                frozenCapture = _frozenScreenCaptureService.CaptureMouseScreen();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Frozen screen capture failed before selection");
+                Model.AddChatItem(string.Format(LocalizationManager.GetValue("Str.Chat.FrozenCaptureFailedTemplate"), ex.Message), TextTypes.Error);
+                return;
+            }
+
+            var selectionOptions = new SelectionAreaWindowOptions()
+            {
+                ScreenshotBytes = frozenCapture.ImageBytes,
+                ScreenBounds = frozenCapture.ScreenBounds
+            };
+
+            bool? result;
+            SelectionAreaWindow window;
+            try
+            {
+                result = _dialogService.ShowWindowDialog<SelectionAreaWindow>(out window, selectionOptions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Frozen selection window failed");
+                Model.AddChatItem(string.Format(LocalizationManager.GetValue("Str.Chat.FrozenCaptureFailedTemplate"), ex.Message), TextTypes.Error);
+                return;
+            }
+
             if (result.HasValue && result.Value)
             {
-                Model.OnceTranslation(window.SelectedArea);
+                var selectedArea = window.SelectedArea;
+                if (selectedArea.Width <= 0 || selectedArea.Height <= 0)
+                {
+                    Model.AddChatItem(LocalizationManager.GetValue("Str.Chat.CaptureAreaNotSelected"), TextTypes.Error);
+                    _logger.LogWarning("Single-shot translation skipped: invalid capture area selected");
+                    return;
+                }
+
+                Model.CaptureConfiguration.CaptureArea = selectedArea;
+                _logger.LogInformation("Single-shot translation area selected: iterationId={IterationId}, screenBounds={ScreenBounds}, captureArea={CaptureArea}",
+                    frozenCapture.IterationId,
+                    frozenCapture.ScreenBounds,
+                    selectedArea);
+                RunOnceTranslation(frozenCapture, selectedArea);
+            }
+        }
+
+        private void RunOnceTranslation(FrozenScreenCapture frozenCapture, System.Drawing.RectangleF selectedArea)
+        {
+            try
+            {
+                _logger.LogInformation("Single-shot translation dispatching: iterationId={IterationId}, screenBounds={ScreenBounds}, captureArea={CaptureArea}",
+                    frozenCapture.IterationId,
+                    frozenCapture.ScreenBounds,
+                    selectedArea);
+                Model.OnceTranslation(frozenCapture, selectedArea);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Single-shot translation dispatch failed");
+                Model.AddChatItem(ex.Message, TextTypes.Error);
             }
         }
 
@@ -147,7 +177,6 @@ namespace Translumo.MVVM.ViewModels
         {
             if (!_dialogService.CloseWindow<SettingsViewModel>())
             {
-                Model.EndTranslation();
                 var scope = _serviceProvider.CreateScope();
                 var viewModel = scope.ServiceProvider.GetService<SettingsViewModel>();
                 viewModel.HasUpdates = _hasUpdates;
@@ -162,14 +191,6 @@ namespace Translumo.MVVM.ViewModels
         private void OnShowHideChat()
         {
             ChatWindowIsVisible = !ChatWindowIsVisible;
-            if (ChatWindowIsVisible)
-            {
-                StartTranslation(false);
-            }
-            else
-            {
-                Model.EndTranslation();
-            }
         }
 
         private async void OnLoadedCommand()
@@ -197,21 +218,6 @@ namespace Translumo.MVVM.ViewModels
             };
         }
 
-        private void StartTranslation(bool showWarning)
-        {
-            if (_dialogService.WindowIsOpened<SettingsViewModel>())
-            {
-                if (showWarning)
-                {
-                    Model.AddChatItem(LocalizationManager.GetValue("Str.Chat.SettingsOpened"), TextTypes.Info);
-                }
-
-                return;
-            }
-
-            Model.StartTranslation();
-        }
-
         private void SendHelpText()
         {
             string GetHotKeyHelpText(string hotKeyName, string localizationKey)
@@ -221,9 +227,7 @@ namespace Translumo.MVVM.ViewModels
 
             var configuration = _hotKeysServiceManager.Configuration;
             Model.AddChatItem(LocalizationManager.GetValue("Str.Hotkeys.GeneralHelp"), TextTypes.Info);
-            Model.AddChatItem(GetHotKeyHelpText(nameof(configuration.SettingVisibilityKey), "Str.Hotkeys.SettingsShowHelp"), TextTypes.Info);
-            Model.AddChatItem(GetHotKeyHelpText(nameof(configuration.SelectAreaKey), "Str.Hotkeys.SelectAreaHelp"), TextTypes.Info);
-            Model.AddChatItem(GetHotKeyHelpText(nameof(configuration.TranslationStateKey), "Str.Hotkeys.OnTranslationHelp"), TextTypes.Info);
+            Model.AddChatItem(GetHotKeyHelpText(nameof(configuration.OnceTranslateKey), "Str.Hotkeys.OnceTranslateHelp"), TextTypes.Info);
         }
     }
 }

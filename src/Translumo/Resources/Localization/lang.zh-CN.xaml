@@ -6,63 +6,91 @@
     <!--  Generic  -->
     <system:String x:Key="Str.Login">代理用户名</system:String>
     <system:String x:Key="Str.Password">代理密码</system:String>
-    <system:String x:Key="Str.ExitConfirmation" xml:space="preserve">确定要退出Translumo吗?&#13;您可以点击最小化按钮，程序将在后台运行 (可通过系统托盘里的图标使用Translumo)。</system:String>
+    <system:String x:Key="Str.ExitConfirmation" xml:space="preserve">确定要退出 Translumo 吗？&#13;您也可以点击最小化按钮隐藏设置窗口，程序仍可通过系统托盘使用。</system:String>
     <system:String x:Key="Str.ExitConfirmationCaption">退出确认</system:String>
-    <system:String x:Key="Str.NewVersion">Translumo更新啦!</system:String>
+    <system:String x:Key="Str.NewVersion">有新版本可用！</system:String>
 
     <!--  Notifications  -->
     <system:String x:Key="Str.Notification.CaptchaPass" xml:space="preserve">请在网站上完成验证码以使用该服务。&#13;另外，每个已注册的代理可能都需要完成一次验证码。</system:String>
 
     <!--  Titles  -->
-    <system:String x:Key="Str.Title.SettingWindow" xml:space="preserve">Translumo设置</system:String>
-    <system:String x:Key="Str.Title.BrowserWindow" xml:space="preserve">Translumo游览器</system:String>
+    <system:String x:Key="Str.Title.SettingWindow" xml:space="preserve">Translumo 设置</system:String>
+    <system:String x:Key="Str.Title.BrowserWindow" xml:space="preserve">Translumo 浏览器</system:String>
 
     <!--  Tray  -->
-    <system:String x:Key="Str.Tray.ShowHideSettings">打开/关闭 设置</system:String>
-    <system:String x:Key="Str.Tray.ShowHideTranslation">显示/隐藏 翻译墙</system:String>
+    <system:String x:Key="Str.Tray.ShowHideSettings">显示/隐藏设置</system:String>
+    <system:String x:Key="Str.Tray.ShowHideTranslation">显示/隐藏翻译窗口</system:String>
     <system:String x:Key="Str.Tray.Exit">退出</system:String>
 
     <!--  Chat  -->
     <system:String x:Key="Str.Chat.SettingsOpened">关闭设置窗口才能开始翻译</system:String>
-    <system:String x:Key="Str.Chat.WindowLocked">翻译墙已锁定（不可调整位置、大小）</system:String>
-    <system:String x:Key="Str.Chat.WindowUnlocked">翻译墙已解锁</system:String>
+    <system:String x:Key="Str.Chat.CaptureAreaNotSelected">请先选择屏幕区域</system:String>
+    <system:String x:Key="Str.Chat.SingleTranslationBusy">单次翻译正在执行，请稍候。</system:String>
+    <system:String x:Key="Str.Chat.CapturerInitFailed">截图初始化失败，请查看日志详情。</system:String>
+    <system:String x:Key="Str.Chat.CaptureFailedTemplate">截图失败：{0}</system:String>
+    <system:String x:Key="Str.Chat.FrozenCaptureFailedTemplate">冻结截图失败：{0}</system:String>
+    <system:String x:Key="Str.Chat.ProcessingFailedTemplate">处理失败：{0}</system:String>
+    <system:String x:Key="Str.Chat.WindowLocked">翻译窗口已锁定</system:String>
+    <system:String x:Key="Str.Chat.WindowUnlocked">翻译窗口已解锁</system:String>
 
     <!--  Language settings  -->
-    <system:String x:Key="Str.LangSettings.SourceLang">源语言（您想要翻译的语言）</system:String>
-    <system:String x:Key="Str.LangSettings.TranslationLang">目标语言（您想要看到的语言）</system:String>
-    <system:String x:Key="Str.LangSettings.Translator">翻译源</system:String>
-    <system:String x:Key="Str.LangSettings.TtsSystem">朗读源</system:String>
+    <system:String x:Key="Str.LangSettings.SourceLang">源语言</system:String>
+    <system:String x:Key="Str.LangSettings.TranslationLang">目标语言</system:String>
+    <system:String x:Key="Str.LangSettings.Translator">翻译器</system:String>
+    <system:String x:Key="Str.LangSettings.TtsSystem">语音朗读</system:String>
+    <system:String x:Key="Str.AiSettings.Title">AI 识图与翻译</system:String>
+    <system:String x:Key="Str.AiSettings.Note">AI 会先识别截图中的文字，再交给翻译器处理。使用 OpenAI 兼容 API，Base URL 应包含版本路径，例如 https://api.example.com/v1。</system:String>
+    <system:String x:Key="Str.AiSettings.OcrSection">AI 文字识别</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationSection">AI 文本翻译</system:String>
+    <system:String x:Key="Str.AiSettings.BaseUrl">Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.ApiKey">API Key</system:String>
+    <system:String x:Key="Str.AiSettings.Model">模型</system:String>
+    <system:String x:Key="Str.AiSettings.OcrBaseUrl">OCR Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.OcrApiKey">OCR API Key</system:String>
+    <system:String x:Key="Str.AiSettings.OcrModel">OCR 模型</system:String>
+    <system:String x:Key="Str.AiSettings.OcrTimeoutSeconds">OCR 请求超时（秒）</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationBaseUrl">翻译 Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationApiKey">翻译 API Key</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationModel">翻译模型</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationTimeoutSeconds">翻译请求超时（秒）</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingModels">正在获取模型...</system:String>
+    <system:String x:Key="Str.AiSettings.ModelsLoaded">已加载 {0} 个模型。</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingOcrModels">正在获取 OCR 模型...</system:String>
+    <system:String x:Key="Str.AiSettings.OcrModelsLoaded">已加载 {0} 个 OCR 模型。</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingTranslationModels">正在获取翻译模型...</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationModelsLoaded">已加载 {0} 个翻译模型。</system:String>
+    <system:String x:Key="Str.AiSettings.OcrPrompt">图片文字识别提示词</system:String>
+    <system:String x:Key="Str.AiSettings.DefaultPrompt">翻译系统提示词</system:String>
+    <system:String x:Key="Str.AiSettings.PromptOverrideLang">覆盖目标语言</system:String>
+    <system:String x:Key="Str.AiSettings.PromptOverride">语言覆盖提示词</system:String>
 
     <!--  Hotkeys descriptions  -->
-    <system:String x:Key="Str.Hotkeys.ChatVisibility">显示/隐藏 翻译墙</system:String>
-    <system:String x:Key="Str.Hotkeys.SettingsVisibility">打开/关闭 设置</system:String>
-    <system:String x:Key="Str.Hotkeys.SelectArea">选择翻译区域</system:String>
-    <system:String x:Key="Str.Hotkeys.OnOffTranslation">开启/关闭 翻译</system:String>
-    <system:String x:Key="Str.Hotkeys.ShowSelectArea">显示已选择的翻译区域</system:String>
+    <system:String x:Key="Str.Hotkeys.ChatVisibility">显示/隐藏翻译窗口</system:String>
+    <system:String x:Key="Str.Hotkeys.SettingsVisibility">打开/关闭设置窗口</system:String>
     <system:String x:Key="Str.Hotkeys.OnceTranslate">选择翻译区域（一次性）</system:String>
-    <system:String x:Key="Str.Hotkeys.WindowChangeStyle">锁定/解除锁定 翻译墙位置</system:String>
+    <system:String x:Key="Str.Hotkeys.WindowChangeStyle">锁定/解锁翻译窗口</system:String>
     <system:String x:Key="Str.Hotkeys.SettingsShowHelp">请按 '{0}' 打开设置页面</system:String>
-    <system:String x:Key="Str.Hotkeys.SelectAreaHelp">请按 '{0}' 选择翻译区域</system:String>
-    <system:String x:Key="Str.Hotkeys.OnTranslationHelp">请按 '{0}' 开始翻译</system:String>
-    <system:String x:Key="Str.Hotkeys.GeneralHelp">要控制本应用，请使用托盘中的右键菜单，或以下快捷键：</system:String>
+    <system:String x:Key="Str.Hotkeys.OnceTranslateHelp">请按 '{0}' 选择区域并翻译一次</system:String>
+    <system:String x:Key="Str.Hotkeys.GeneralHelp">翻译需要手动触发：</system:String>
 
     <!--  Appearance settings  -->
-    <system:String x:Key="Str.AppearanceSettings.WindowColor">翻译墙背景色</system:String>
+    <system:String x:Key="Str.AppearanceSettings.WindowColor">翻译窗口背景色</system:String>
     <system:String x:Key="Str.AppearanceSettings.FontColor">文字颜色</system:String>
     <system:String x:Key="Str.AppearanceSettings.FontSize">文字大小</system:String>
     <system:String x:Key="Str.AppearanceSettings.Bold">加粗</system:String>
-    <system:String x:Key="Str.AppearanceSettings.ExcludeFromCaptue">排除翻译墙</system:String>
+    <system:String x:Key="Str.AppearanceSettings.ExcludeFromCaptue">截图时排除翻译窗口</system:String>
     <system:String x:Key="Str.AppearanceSettings.LineSpacing">行间距</system:String>
-    <system:String x:Key="Str.AppearanceSettings.WindowOpacity">翻译墙背景透明度</system:String>
-    <system:String x:Key="Str.AppearanceSettings.FontSizePanelCaption">字体大小 — 改变</system:String>
-    <system:String x:Key="Str.AppearanceSettings.FontColorPanelCaption">字体颜色 — 改变</system:String>
-    <system:String x:Key="Str.AppearanceSettings.KeepFormatting">保留翻译文本原始格式</system:String>
+    <system:String x:Key="Str.AppearanceSettings.WindowOpacity">翻译窗口背景透明度</system:String>
+    <system:String x:Key="Str.AppearanceSettings.FontSizePanelCaption">调整字体大小</system:String>
+    <system:String x:Key="Str.AppearanceSettings.FontColorPanelCaption">调整字体颜色</system:String>
+    <system:String x:Key="Str.AppearanceSettings.KeepFormatting">保留原文格式</system:String>
+    <system:String x:Key="Str.AppearanceSettings.TextAlignment">文本对齐</system:String>
     <system:String x:Key="Str.AppearanceSettings.Left">左对齐</system:String>
     <system:String x:Key="Str.AppearanceSettings.Center">居中</system:String>
     <system:String x:Key="Str.AppearanceSettings.Right">右对齐</system:String>
     <system:String x:Key="Str.AppearanceSettings.Justify">两端对齐</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts">自动清屏</system:String>
-    <system:String x:Key="Str.AppearanceSettings.AutoClearTexts2">消失时间</system:String>
+    <system:String x:Key="Str.AppearanceSettings.AutoClearTexts2">无操作后</system:String>
     <system:String x:Key="Str.AppearanceSettings.Ms">ms</system:String>
 
 
@@ -70,19 +98,19 @@
     <system:String x:Key="Str.ProxySettings.Proxy">代理</system:String>
     <system:String x:Key="Str.ProxySettings.IpAddress">IP地址</system:String>
     <system:String x:Key="Str.ProxySettings.Port">端口</system:String>
-    <system:String x:Key="Str.ProxySettings.Note" xml:space="preserve">使用 IPv4 代理可以避免因大量并发请求而被服务器封禁，&#13;配置多个代理后Translumo会自动分配它们的使用频率。</system:String>
-    <system:String x:Key="Str.ProxySettings.Caption">代理列表</system:String>
+    <system:String x:Key="Str.ProxySettings.Note" xml:space="preserve">使用 IPv4 代理可降低因大量请求而被翻译服务限制的概率。&#13;配置多个代理后，Translumo 会在请求之间轮换使用。</system:String>
+    <system:String x:Key="Str.ProxySettings.Caption">代理列表 - 修改</system:String>
 
 
     <!--  OCR settings  -->
     <system:String x:Key="Str.OcrSettings.TesseractOcr">Tesseract OCR</system:String>
     <system:String x:Key="Str.OcrSettings.WindowsOcr">Windows OCR</system:String>
     <system:String x:Key="Str.OcrSettings.EasyOcr">EasyOCR</system:String>
-    <system:String x:Key="Str.OcrSettings.TesseractOcrDesc" xml:space="preserve">Tesseract 5.0，采用LSTM mode。它是早期最流行的开源OCR（图文识别）解决方案之一。&#13;&#13;能够识别纯色背景排版、字体不复杂的简单文本。&#13;&#13;&lt;Bold&gt;性能影响:&lt;/Bold&gt; 低</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc" xml:space="preserve">微软原生OCR解决方案。能够处理比Tesseract更复杂的背景。&#13;&#13;&lt;Bold&gt;性能影响:&lt;/Bold&gt; 中</system:String>
+    <system:String x:Key="Str.OcrSettings.TesseractOcrDesc" xml:space="preserve">Tesseract 5.0，采用 LSTM 模式。它是早期最流行的开源 OCR（文字识别）方案之一。&#13;&#13;适合识别纯色背景、字体较简单的文本。&#13;&#13;&lt;Bold&gt;性能影响：&lt;/Bold&gt;低</system:String>
+    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc" xml:space="preserve">微软原生 OCR 方案。能够处理比 Tesseract 更复杂的背景。&#13;&#13;&lt;Bold&gt;性能影响：&lt;/Bold&gt;低</system:String>
     <system:String x:Key="Str.OcrSettings.WindowsOcrDesc2">可能需要安装其他语言包。</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc" xml:space="preserve">Jaided AI出品的最先进的开源OCR解决方案。&#13;&#13;即使在识别复杂的背景以及花哨的字体时，也能实现高精度的文本识别。&#13;&#13;&lt;Bold&gt;性能影响:&lt;/Bold&gt; 高</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc2">需要安装（Python、PyTorch）其他软件包。</system:String>
+    <system:String x:Key="Str.OcrSettings.EasyOcrDesc" xml:space="preserve">Jaided AI 出品的高级开源 OCR 方案。&#13;&#13;即使面对复杂背景和特殊字体，也能提供较高的识别精度。&#13;&#13;&lt;Bold&gt;性能影响：&lt;/Bold&gt;高</system:String>
+    <system:String x:Key="Str.OcrSettings.EasyOcrDesc2">需要安装额外的软件包（Python、PyTorch）。</system:String>
 
     <!--  About window  -->
     <system:String x:Key="Str.About.MaintainedBy">共同维护者：Aleksei Vekhov</system:String>
@@ -92,9 +120,20 @@
 
     <!--  Navigation menu  -->
     <system:String x:Key="Str.Navigation.Languages">语言</system:String>
-    <system:String x:Key="Str.Navigation.Appearance">翻译墙</system:String>
-    <system:String x:Key="Str.Navigation.Ocr">文字识别器</system:String>
+    <system:String x:Key="Str.Navigation.Appearance">外观</system:String>
+    <system:String x:Key="Str.Navigation.Ocr">文字识别</system:String>
     <system:String x:Key="Str.Navigation.HotKeys">快捷键</system:String>
+    <system:String x:Key="Str.Navigation.Logs">日志</system:String>
+
+    <!--  Log settings  -->
+    <system:String x:Key="Str.LogSettings.Search">搜索</system:String>
+    <system:String x:Key="Str.LogSettings.Level">级别</system:String>
+    <system:String x:Key="Str.LogSettings.LevelAll">全部</system:String>
+    <system:String x:Key="Str.LogSettings.Time">时间</system:String>
+    <system:String x:Key="Str.LogSettings.Source">来源</system:String>
+    <system:String x:Key="Str.LogSettings.Message">消息</system:String>
+    <system:String x:Key="Str.LogSettings.CopySelected">复制选中</system:String>
+    <system:String x:Key="Str.LogSettings.Clear">清空</system:String>
 
     <!--  Languages  -->
     <system:String x:Key="Str.Languages.English">英文</system:String>
@@ -156,11 +195,10 @@
 
     <!--  Buttons  -->
     <system:String x:Key="Str.Button.SettingProxy">配置代理</system:String>
+    <system:String x:Key="Str.Button.GetAiModels">获取模型</system:String>
+    <system:String x:Key="Str.Button.ResetDefault">重置默认</system:String>
+    <system:String x:Key="Str.Button.ClearPromptOverride">清除此覆盖</system:String>
     <system:String x:Key="Str.Button.ShowText">示例文本</system:String>
-    <system:String x:Key="Str.Button.Apply">接受</system:String>
-
-    <system:String x:Key="Str.Lookupper.ProjectNote">我的项目首页:</system:String>
-    <system:String x:Key="Str.Lookupper.Url">https://lookupper.com</system:String>
-
+    <system:String x:Key="Str.Button.Apply">应用</system:String>
 
 </ResourceDictionary>

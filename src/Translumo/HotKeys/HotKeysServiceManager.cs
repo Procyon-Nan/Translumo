@@ -10,11 +10,8 @@ namespace Translumo.HotKeys
 {
     public class HotKeysServiceManager
     {
-        public event EventHandler SelectAreaKeyPressed;
         public event EventHandler ChatVisibilityKeyPressed;
-        public event EventHandler TranslationStateKeyPressed;
         public event EventHandler SettingVisibilityKeyPressed;
-        public event EventHandler ShowSelectionAreaKeyPressed;
         public event EventHandler OnceTranslateKeyPressed;
         public event EventHandler WindowStyleChangeKeyPressed;
 
@@ -36,10 +33,7 @@ namespace Translumo.HotKeys
             this._keyNamesLink = new[]
             {
                 (nameof(configuration.ChatVisibilityKey), nameof(configuration.ChatVisibilityGamepadKey)),
-                (nameof(configuration.SelectAreaKey), nameof(configuration.SelectAreaGamepadKey)),
-                (nameof(configuration.TranslationStateKey), nameof(configuration.TranslationStateGamepadKey)),
                 (nameof(configuration.SettingVisibilityKey), nameof(configuration.SettingVisibilityGamepadKey)),
-                (nameof(configuration.ShowSelectionAreaKey), nameof(configuration.ShowSelectionAreaGamepadKey)),
                 (nameof(configuration.OnceTranslateKey), nameof(configuration.OnceTranslateGamepadKey)),
                 (nameof(configuration.WindowStyleChangeKey), nameof(configuration.WindowStyleChangeGamepadKey)),
             };
@@ -165,16 +159,6 @@ namespace Translumo.HotKeys
                 .gamepadActionName;
         }
 
-        private void OnTranslationStatePressed()
-        {
-            TranslationStateKeyPressed?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnSelectAreaPressed()
-        {
-            SelectAreaKeyPressed?.Invoke(this, EventArgs.Empty);
-        }
-
         private void OnChatVisibilityPressed()
         {
             ChatVisibilityKeyPressed?.Invoke(this, EventArgs.Empty);
@@ -183,11 +167,6 @@ namespace Translumo.HotKeys
         private void OnSettingVisibilityPressed()
         {
             SettingVisibilityKeyPressed?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnShowSelectionAreaPressed()
-        {
-            ShowSelectionAreaKeyPressed?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnOnceTranslatePressed()
@@ -209,20 +188,8 @@ namespace Translumo.HotKeys
                         configuration.ChatVisibilityKey.KeyModifier, OnChatVisibilityPressed)
                 },
                 {
-                    nameof(configuration.SelectAreaKey), new HotKey(configuration.SelectAreaKey.Key,
-                        configuration.SelectAreaKey.KeyModifier, OnSelectAreaPressed)
-                },
-                {
-                    nameof(configuration.TranslationStateKey), new HotKey(configuration.TranslationStateKey.Key,
-                        configuration.TranslationStateKey.KeyModifier, OnTranslationStatePressed)
-                },
-                {
                     nameof(configuration.SettingVisibilityKey), new HotKey(configuration.SettingVisibilityKey.Key,
                         configuration.SettingVisibilityKey.KeyModifier, OnSettingVisibilityPressed)
-                },
-                {
-                    nameof(configuration.ShowSelectionAreaKey), new HotKey(configuration.ShowSelectionAreaKey.Key,
-                        configuration.ShowSelectionAreaKey.KeyModifier, OnShowSelectionAreaPressed)
                 },
                 {
                     nameof(configuration.OnceTranslateKey), new HotKey(configuration.OnceTranslateKey.Key,
@@ -240,10 +207,7 @@ namespace Translumo.HotKeys
             return new Dictionary<string, GamepadHotKey>()
             {
                 { nameof(configuration.ChatVisibilityGamepadKey), new GamepadHotKey(configuration.ChatVisibilityGamepadKey.Key, OnChatVisibilityPressed) },
-                { nameof(configuration.SelectAreaGamepadKey), new GamepadHotKey(configuration.SelectAreaGamepadKey.Key, OnSelectAreaPressed) },
-                { nameof(configuration.TranslationStateGamepadKey), new GamepadHotKey(configuration.TranslationStateGamepadKey.Key, OnTranslationStatePressed) },
                 { nameof(configuration.SettingVisibilityGamepadKey), new GamepadHotKey(configuration.SettingVisibilityGamepadKey.Key, OnSettingVisibilityPressed) },
-                { nameof(configuration.ShowSelectionAreaGamepadKey), new GamepadHotKey(configuration.ShowSelectionAreaGamepadKey.Key, OnShowSelectionAreaPressed) },
                 { nameof(configuration.OnceTranslateGamepadKey), new GamepadHotKey(configuration.OnceTranslateGamepadKey.Key, OnOnceTranslatePressed) },
                 { nameof(configuration.WindowStyleChangeGamepadKey), new GamepadHotKey(configuration.WindowStyleChangeGamepadKey.Key, OnWindowStyleChangePressed) }
             };

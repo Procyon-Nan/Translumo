@@ -6,6 +6,7 @@
     xmlns:controls="clr-namespace:Translumo.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml"
     xmlns:translation="clr-namespace:Translumo.Translation;assembly=Translumo.Translation"
     xmlns:tts="clr-namespace:Translumo.TTS;assembly=Translumo.TTS"
     d:DesignHeight="450"
@@ -38,7 +39,11 @@
             <ColumnDefinition Width="475" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
+        <ScrollViewer
+            Grid.Column="0"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+        <StackPanel>
             <StackPanel.Resources>
                 <Style TargetType="{x:Type StackPanel}">
                     <Setter Property="Margin" Value="0,0,0,20" />
@@ -75,8 +80,8 @@
                 <ComboBox
                     Width="130"
                     FontSize="14"
-                    ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
-                    SelectedItem="{Binding Path=Model.Translator}"
+                    ItemsSource="{Binding Path=AvailableTranslators}"
+                    SelectedItem="{Binding Path=Translator}"
                     Style="{DynamicResource MaterialDesignComboBox}" />
                 <Label
                     Margin="10,0,0,0"
@@ -115,6 +120,216 @@
                 <GroupBox.Header>
                     <Label
                         Margin="0,-7,0,-7"
+                        Content="{DynamicResource Str.AiSettings.Title}"
+                        Style="{StaticResource SecondaryHeaderLabel}" />
+                </GroupBox.Header>
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        FontSize="12"
+                        Style="{StaticResource TextBlockBase}"
+                        Text="{DynamicResource Str.AiSettings.Note}"
+                        TextWrapping="WrapWithOverflow" />
+                    <Label
+                        Margin="0,0,0,4"
+                        Content="{DynamicResource Str.AiSettings.OcrSection}"
+                        Style="{StaticResource SecondaryHeaderLabel}" />
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <TextBox
+                            Width="300"
+                            FontSize="14"
+                            Style="{DynamicResource MaterialDesignTextBox}"
+                            Text="{Binding Path=Model.AiOcrBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.OcrBaseUrl}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <TextBox
+                            Width="300"
+                            FontSize="14"
+                            Style="{DynamicResource MaterialDesignTextBox}"
+                            Text="{Binding Path=Model.AiOcrApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.OcrApiKey}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <ComboBox
+                            Width="220"
+                            FontSize="14"
+                            ItemsSource="{Binding Path=AiOcrModels}"
+                            SelectedItem="{Binding Path=Model.AiOcrModel, Mode=TwoWay}"
+                            Style="{DynamicResource MaterialDesignComboBox}" />
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding LoadAiOcrModelsCommand}"
+                            Content="{DynamicResource Str.Button.GetAiModels}"
+                            Style="{StaticResource PrimaryButton}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.OcrModel}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <mde:OversizedNumberSpinner
+                            Width="140"
+                            Height="52"
+                            Max="600"
+                            Min="5"
+                            Value="{Binding Path=Model.AiOcrRequestTimeoutSeconds, Mode=TwoWay}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.OcrTimeoutSeconds}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        FontSize="12"
+                        Style="{StaticResource TextBlockBase}"
+                        Text="{Binding Path=AiOcrModelsStatus}"
+                        TextWrapping="WrapWithOverflow" />
+                    <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                        <Label
+                            Content="{DynamicResource Str.AiSettings.OcrPrompt}"
+                            Style="{StaticResource SecondaryLabel}" />
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ResetAiOcrPromptCommand}"
+                            Content="{DynamicResource Str.Button.ResetDefault}"
+                            Style="{StaticResource PrimaryButton}" />
+                    </StackPanel>
+                    <TextBox
+                        Width="430"
+                        Height="92"
+                        Margin="0,0,0,12"
+                        AcceptsReturn="True"
+                        FontSize="12"
+                        Style="{DynamicResource MaterialDesignTextBox}"
+                        Text="{Binding Path=Model.AiOcrSystemPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <Label
+                        Margin="0,6,0,4"
+                        Content="{DynamicResource Str.AiSettings.TranslationSection}"
+                        Style="{StaticResource SecondaryHeaderLabel}" />
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <TextBox
+                            Width="300"
+                            FontSize="14"
+                            Style="{DynamicResource MaterialDesignTextBox}"
+                            Text="{Binding Path=Model.AiTranslationBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.TranslationBaseUrl}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <TextBox
+                            Width="300"
+                            FontSize="14"
+                            Style="{DynamicResource MaterialDesignTextBox}"
+                            Text="{Binding Path=Model.AiTranslationApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.TranslationApiKey}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <ComboBox
+                            Width="220"
+                            FontSize="14"
+                            ItemsSource="{Binding Path=AiTranslationModels}"
+                            SelectedItem="{Binding Path=Model.AiTranslationModel, Mode=TwoWay}"
+                            Style="{DynamicResource MaterialDesignComboBox}" />
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding LoadAiTranslationModelsCommand}"
+                            Content="{DynamicResource Str.Button.GetAiModels}"
+                            Style="{StaticResource PrimaryButton}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.TranslationModel}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <mde:OversizedNumberSpinner
+                            Width="140"
+                            Height="52"
+                            Max="600"
+                            Min="5"
+                            Value="{Binding Path=Model.AiTranslationRequestTimeoutSeconds, Mode=TwoWay}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.TranslationTimeoutSeconds}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        FontSize="12"
+                        Style="{StaticResource TextBlockBase}"
+                        Text="{Binding Path=AiTranslationModelsStatus}"
+                        TextWrapping="WrapWithOverflow" />
+                    <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                        <Label
+                            Content="{DynamicResource Str.AiSettings.DefaultPrompt}"
+                            Style="{StaticResource SecondaryLabel}" />
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ResetAiDefaultPromptCommand}"
+                            Content="{DynamicResource Str.Button.ResetDefault}"
+                            Style="{StaticResource PrimaryButton}" />
+                    </StackPanel>
+                    <TextBox
+                        Width="430"
+                        Height="92"
+                        Margin="0,0,0,12"
+                        AcceptsReturn="True"
+                        FontSize="12"
+                        Style="{DynamicResource MaterialDesignTextBox}"
+                        Text="{Binding Path=Model.AiDefaultSystemPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <ComboBox
+                            Width="180"
+                            DisplayMemberPath="DisplayName"
+                            FontSize="14"
+                            ItemsSource="{Binding Path=AvailableTranslationLanguages}"
+                            SelectedItem="{Binding Path=SelectedAiPromptLanguage, Mode=TwoWay}"
+                            Style="{StaticResource ComboBoxBase}" />
+                        <Label
+                            Margin="10,0,0,0"
+                            Content="{DynamicResource Str.AiSettings.PromptOverrideLang}"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                        <Label
+                            Content="{DynamicResource Str.AiSettings.PromptOverride}"
+                            Style="{StaticResource SecondaryLabel}" />
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ClearAiPromptOverrideCommand}"
+                            Content="{DynamicResource Str.Button.ClearPromptOverride}"
+                            Style="{StaticResource PrimaryButton}" />
+                    </StackPanel>
+                    <TextBox
+                        Width="430"
+                        Height="92"
+                        AcceptsReturn="True"
+                        FontSize="12"
+                        Style="{DynamicResource MaterialDesignTextBox}"
+                        Text="{Binding Path=AiPromptOverrideText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Margin="0,20,0,0" Style="{StaticResource MaterialDesignGroupBox}" Visibility="{Binding IsLegacyTranslatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <GroupBox.Header>
+                    <Label
+                        Margin="0,-7,0,-7"
                         Content="{DynamicResource Str.ProxySettings.Proxy}"
                         Style="{StaticResource SecondaryHeaderLabel}" />
                 </GroupBox.Header>
@@ -133,6 +348,7 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
+        </ScrollViewer>
         <DockPanel
             Grid.Row="0"
             Grid.Column="1"

@@ -24,6 +24,12 @@
 
     <!--  Chat  -->
     <system:String x:Key="Str.Chat.SettingsOpened">Close settings to start translation</system:String>
+    <system:String x:Key="Str.Chat.CaptureAreaNotSelected">Select a screen area first</system:String>
+    <system:String x:Key="Str.Chat.SingleTranslationBusy">A one-time translation is already running.</system:String>
+    <system:String x:Key="Str.Chat.CapturerInitFailed">Failed to initialize screen capture. Check the logs for details.</system:String>
+    <system:String x:Key="Str.Chat.CaptureFailedTemplate">Failed to capture screen: {0}</system:String>
+    <system:String x:Key="Str.Chat.FrozenCaptureFailedTemplate">Failed to freeze screen: {0}</system:String>
+    <system:String x:Key="Str.Chat.ProcessingFailedTemplate">Processing failed: {0}</system:String>
     <system:String x:Key="Str.Chat.WindowLocked">Translation window has been locked</system:String>
     <system:String x:Key="Str.Chat.WindowUnlocked">Translation window has been unlocked</system:String>
 
@@ -32,19 +38,40 @@
     <system:String x:Key="Str.LangSettings.TranslationLang">Translation language</system:String>
     <system:String x:Key="Str.LangSettings.Translator">Translator</system:String>
     <system:String x:Key="Str.LangSettings.TtsSystem">Text to speech system</system:String>
+    <system:String x:Key="Str.AiSettings.Title">AI recognition and translation</system:String>
+    <system:String x:Key="Str.AiSettings.Note">AI reads text from screenshots before translation. Use an OpenAI-compatible API; Base URL should include the version path, for example https://api.example.com/v1.</system:String>
+    <system:String x:Key="Str.AiSettings.OcrSection">AI text recognition</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationSection">AI translation</system:String>
+    <system:String x:Key="Str.AiSettings.BaseUrl">Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.ApiKey">API key</system:String>
+    <system:String x:Key="Str.AiSettings.Model">Model</system:String>
+    <system:String x:Key="Str.AiSettings.OcrBaseUrl">OCR Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.OcrApiKey">OCR API key</system:String>
+    <system:String x:Key="Str.AiSettings.OcrModel">OCR model</system:String>
+    <system:String x:Key="Str.AiSettings.OcrTimeoutSeconds">OCR request timeout (seconds)</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationBaseUrl">Translation Base URL</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationApiKey">Translation API key</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationModel">Translation model</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationTimeoutSeconds">Translation request timeout (seconds)</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingModels">Loading models...</system:String>
+    <system:String x:Key="Str.AiSettings.ModelsLoaded">Loaded {0} model(s).</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingOcrModels">Loading OCR models...</system:String>
+    <system:String x:Key="Str.AiSettings.OcrModelsLoaded">Loaded {0} OCR model(s).</system:String>
+    <system:String x:Key="Str.AiSettings.LoadingTranslationModels">Loading translation models...</system:String>
+    <system:String x:Key="Str.AiSettings.TranslationModelsLoaded">Loaded {0} translation model(s).</system:String>
+    <system:String x:Key="Str.AiSettings.OcrPrompt">Image text recognition prompt</system:String>
+    <system:String x:Key="Str.AiSettings.DefaultPrompt">Translation system prompt</system:String>
+    <system:String x:Key="Str.AiSettings.PromptOverrideLang">Override target language</system:String>
+    <system:String x:Key="Str.AiSettings.PromptOverride">Language override prompt</system:String>
 
     <!--  Hotkeys descriptions  -->
     <system:String x:Key="Str.Hotkeys.ChatVisibility">Show/hide translation window</system:String>
     <system:String x:Key="Str.Hotkeys.SettingsVisibility">Open/close the Settings window</system:String>
-    <system:String x:Key="Str.Hotkeys.SelectArea">Select screen capture area</system:String>
-    <system:String x:Key="Str.Hotkeys.OnOffTranslation">On/off translation</system:String>
-    <system:String x:Key="Str.Hotkeys.ShowSelectArea">Show selected screen capture area</system:String>
     <system:String x:Key="Str.Hotkeys.OnceTranslate">Select area and translate text once</system:String>
     <system:String x:Key="Str.Hotkeys.WindowChangeStyle">Lock/unlock translation window</system:String>
     <system:String x:Key="Str.Hotkeys.SettingsShowHelp">Press '{0}' to open the Settings</system:String>
-    <system:String x:Key="Str.Hotkeys.SelectAreaHelp">Press '{0}' to select detection area</system:String>
-    <system:String x:Key="Str.Hotkeys.OnTranslationHelp">Press '{0}' to start translation</system:String>
-    <system:String x:Key="Str.Hotkeys.GeneralHelp">To control the app use context menu from tray or following hotkeys:</system:String>
+    <system:String x:Key="Str.Hotkeys.OnceTranslateHelp">Press '{0}' to select an area and translate once</system:String>
+    <system:String x:Key="Str.Hotkeys.GeneralHelp">Translation is run manually:</system:String>
 
     <!--  Appearance settings  -->
     <system:String x:Key="Str.AppearanceSettings.WindowColor">Window color</system:String>
@@ -57,6 +84,7 @@
     <system:String x:Key="Str.AppearanceSettings.FontSizePanelCaption">Font size — change</system:String>
     <system:String x:Key="Str.AppearanceSettings.FontColorPanelCaption">Font color — change</system:String>
     <system:String x:Key="Str.AppearanceSettings.KeepFormatting">Keep source formatting</system:String>
+    <system:String x:Key="Str.AppearanceSettings.TextAlignment">Text alignment</system:String>
     <system:String x:Key="Str.AppearanceSettings.Left">Align Text Left</system:String>
     <system:String x:Key="Str.AppearanceSettings.Center">Align Text Center</system:String>
     <system:String x:Key="Str.AppearanceSettings.Right">Align Text Right</system:String>
@@ -95,6 +123,17 @@
     <system:String x:Key="Str.Navigation.Appearance">Appearance</system:String>
     <system:String x:Key="Str.Navigation.Ocr">Text recognition</system:String>
     <system:String x:Key="Str.Navigation.HotKeys">Hotkeys</system:String>
+    <system:String x:Key="Str.Navigation.Logs">Logs</system:String>
+
+    <!--  Log settings  -->
+    <system:String x:Key="Str.LogSettings.Search">Search</system:String>
+    <system:String x:Key="Str.LogSettings.Level">Level</system:String>
+    <system:String x:Key="Str.LogSettings.LevelAll">All</system:String>
+    <system:String x:Key="Str.LogSettings.Time">Time</system:String>
+    <system:String x:Key="Str.LogSettings.Source">Source</system:String>
+    <system:String x:Key="Str.LogSettings.Message">Message</system:String>
+    <system:String x:Key="Str.LogSettings.CopySelected">Copy selected</system:String>
+    <system:String x:Key="Str.LogSettings.Clear">Clear</system:String>
 
     <!--  Languages  -->
     <system:String x:Key="Str.Languages.English">English</system:String>
@@ -156,11 +195,10 @@
 
     <!--  Buttons  -->
     <system:String x:Key="Str.Button.SettingProxy">Configure proxy</system:String>
+    <system:String x:Key="Str.Button.GetAiModels">Get models</system:String>
+    <system:String x:Key="Str.Button.ResetDefault">Reset default</system:String>
+    <system:String x:Key="Str.Button.ClearPromptOverride">Clear override</system:String>
     <system:String x:Key="Str.Button.ShowText">Show text example</system:String>
     <system:String x:Key="Str.Button.Apply">Apply</system:String>
-
-    <system:String x:Key="Str.Lookupper.ProjectNote">Main project I’m working on:</system:String>
-    <system:String x:Key="Str.Lookupper.Url">https://lookupper.com</system:String>
-
 
 </ResourceDictionary>

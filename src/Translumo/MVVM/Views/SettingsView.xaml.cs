@@ -7,7 +7,6 @@ using System.Windows.Media.Animation;
 using Translumo.Infrastructure.Language;
 using Translumo.MVVM.ViewModels;
 using Translumo.Services;
-using Translumo.Utils;
 
 namespace Translumo.MVVM.Views
 {
@@ -106,14 +105,5 @@ namespace Translumo.MVVM.Views
             }
         }
 
-        private void OnLookupperLinkClick(object sender, RoutedEventArgs e)
-        {
-            var destinationurl = LocalizationManager.GetValue($"Str.Lookupper.Url");
-            var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
-            {
-                UseShellExecute = true
-            };
-            System.Diagnostics.Process.Start(sInfo);
-        }
     }
 }

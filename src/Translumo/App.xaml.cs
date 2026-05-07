@@ -16,11 +16,10 @@ using Translumo.Infrastructure.Constants;
 using Translumo.Infrastructure.Dispatching;
 using Translumo.Infrastructure.Encryption;
 using Translumo.Infrastructure.Language;
-using Translumo.Infrastructure.MachineLearning;
 using Translumo.Infrastructure.Python;
+using Translumo.Logging;
 using Translumo.MVVM.Models;
 using Translumo.MVVM.ViewModels;
-using Translumo.OCR;
 using Translumo.OCR.Configuration;
 using Translumo.Processing;
 using Translumo.Processing.Configuration;
@@ -99,8 +98,6 @@ namespace Translumo
         {
             base.OnStartup(e);
 
-            CheckIfPathsIsASCII();
-
             var configurationStorage = _serviceProvider.GetService<ConfigurationStorage>();
             configurationStorage.LoadConfiguration();
 
@@ -119,7 +116,7 @@ namespace Translumo
             services.AddScoped<AppearanceSettingsViewModel>();
             services.AddScoped<HotkeysSettingsViewModel>();
             services.AddScoped<LanguagesSettingsViewModel>();
-            services.AddScoped<OcrSettingsViewModel>();
+            services.AddScoped<LogSettingsViewModel>();
 
             var chatWindowConfiguration = ChatWindowConfiguration.Default;
             services.AddSingleton<OcrGeneralConfiguration>(OcrGeneralConfiguration.Default);
@@ -129,6 +126,7 @@ namespace Translumo
             services.AddSingleton<HotKeysConfiguration>(HotKeysConfiguration.Default);
             services.AddSingleton<SystemConfiguration>(SystemConfiguration.Default);
             services.AddSingleton<TextProcessingConfiguration>(chatWindowConfiguration.TextProcessing);
+            services.AddSingleton(RuntimeLogStore.Instance);
 
             var chatMediatorInstance = new ChatUITextMediator();
             services.AddSingleton<IChatTextMediator, ChatUITextMediator>(provider => chatMediatorInstance);
@@ -139,9 +137,7 @@ namespace Translumo
             services.AddSingleton<ScreenCaptureConfiguration>();
             services.AddSingleton<DialogService>();
             services.AddSingleton<LanguageService>();
-            services.AddSingleton<TextDetectionProvider>();
             services.AddSingleton<IActionDispatcher, InteractionActionDispatcher>();
-            services.AddSingleton<TextValidityPredictor>();
             services.AddSingleton<IControllerService, GamepadService>();
             services.AddSingleton<IControllerInputProvider, ControllerInputProvider>();
             services.AddSingleton<ObservablePipe<Keystroke>>(new ObservablePipe<Keystroke>(Application.Current.Dispatcher));
@@ -151,10 +147,11 @@ namespace Translumo
             services.AddSingleton<PythonEngineWrapper>();
 
             services.AddTransient<IProcessingService, TranslationProcessingService>();
-            services.AddTransient<OcrEnginesFactory>();
+            services.AddTransient<AiTextRecognitionService>();
+            services.AddTransient<ScreenshotArchiveService>();
+            services.AddTransient<FrozenScreenCaptureService>();
             services.AddTransient<TranslatorFactory>();
-            services.AddTransient<TextResultCacheService>();
-            services.AddTransient<IPredictor<InputTextPrediction, OutputTextPrediction>, MlPredictor<InputTextPrediction, OutputTextPrediction>>();
+            services.AddSingleton<IProcessingTextLocalizer, ProcessingTextLocalizer>();
             services.AddTransient<IEncryptionService, AesEncryptionService>();
             services.AddTransient<LanguageDescriptorFactory>();
             services.AddTransient<TtsFactory>();
@@ -168,6 +165,7 @@ namespace Translumo
             var configuration = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .MinimumLevel.Verbose()
+                .WriteTo.Sink(new RuntimeLogSink(RuntimeLogStore.Instance))
                 .WriteTo.File("Logs/log.txt", LogEventLevel.Warning, rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}", retainedFileCountLimit: 10);
 
 #if DEBUG

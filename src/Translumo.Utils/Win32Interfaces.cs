@@ -20,6 +20,17 @@ namespace Translumo.Utils
         public static extern int GetSystemMetrics(SystemMetricTypes nIndex);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetCursorPos(out POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr MonitorFromPoint(POINT pt, uint dwFlags);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
+
+        [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hwnd, int index);
 
         [DllImport("user32.dll")]

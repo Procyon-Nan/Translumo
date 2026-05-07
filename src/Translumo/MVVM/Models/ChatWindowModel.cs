@@ -10,7 +10,6 @@ namespace Translumo.MVVM.Models
     {
         public ChatWindowConfiguration Configuration { get; set; }
         public ScreenCaptureConfiguration CaptureConfiguration { get; set; }
-        public bool TranslationIsRunning => _translationProcessingService.IsStarted;
 
         public event EventHandler<ChatItemAddedEventArgs> ChatItemAdded;
         public event EventHandler<ChatFirstItemsRemovedEventArgs> ChatFirstItemsRemoved;
@@ -52,30 +51,9 @@ namespace Translumo.MVVM.Models
             ChatFirstItemsRemoved?.Invoke(this, new ChatFirstItemsRemovedEventArgs(count));
         }
 
-        public void StartTranslation()
+        public void OnceTranslation(FrozenScreenCapture frozenCapture, RectangleF selectedArea)
         {
-            if (TranslationIsRunning)
-            {
-                return;
-            }
-
-            ClearAllChatItems();
-            _translationProcessingService.StartProcessing();
-        }
-
-        public void OnceTranslation(RectangleF captureArea)
-        {
-            _translationProcessingService.ProcessOnce(captureArea);
-        }
-
-        public void EndTranslation()
-        {
-            if (!TranslationIsRunning)
-            {
-                return;
-            }
-
-            _translationProcessingService.StopProcessing();
+            _translationProcessingService.ProcessOnce(frozenCapture, selectedArea);
         }
     }
 }
