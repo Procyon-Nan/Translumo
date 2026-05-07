@@ -1,0 +1,196 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 1.1.0 or v1.1.0"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark this release as a pre-release"
+        required: false
+        default: false
+        type: boolean
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+env:
+  PROJECT_PATH: src/Translumo/Translumo.csproj
+  PUBLISH_DIR: artifacts/publish
+  PACKAGE_DIR: artifacts/package
+
+jobs:
+  release:
+    name: Build and upload release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Resolve release version
+        id: resolve
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $inputVersion = "${{ inputs.version }}"
+            $isPrerelease = "${{ inputs.prerelease }}"
+          } else {
+            $inputVersion = "${{ github.ref_name }}"
+            $isPrerelease = "false"
+          }
+
+          $tag = $inputVersion.Trim()
+          if ([string]::IsNullOrWhiteSpace($tag)) {
+            throw "Release version is required."
+          }
+
+          if ($tag.StartsWith("v")) {
+            $version = $tag.Substring(1)
+          } else {
+            $version = $tag
+            $tag = "v$tag"
+          }
+
+          if ($version -notmatch "^\d+\.\d+\.\d+(\.\d+)?$") {
+            throw "Release version must be X.Y.Z, X.Y.Z.W, vX.Y.Z, or vX.Y.Z.W."
+          }
+
+          $zipName = "Translumo_AI_${version}_win-x64.zip"
+          $zipPath = "artifacts/$zipName"
+          $shaPath = "$zipPath.sha256"
+
+          "RELEASE_TAG=$tag" >> $env:GITHUB_ENV
+          "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+          "IS_PRERELEASE=$isPrerelease" >> $env:GITHUB_ENV
+          "ZIP_NAME=$zipName" >> $env:GITHUB_ENV
+          "ZIP_PATH=$zipPath" >> $env:GITHUB_ENV
+          "SHA_PATH=$shaPath" >> $env:GITHUB_ENV
+
+          "release_tag=$tag" >> $env:GITHUB_OUTPUT
+          "release_version=$version" >> $env:GITHUB_OUTPUT
+          "is_prerelease=$isPrerelease" >> $env:GITHUB_OUTPUT
+          "zip_name=$zipName" >> $env:GITHUB_OUTPUT
+          "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
+          "sha_path=$shaPath" >> $env:GITHUB_OUTPUT
+
+      - name: Stamp assembly version
+        shell: pwsh
+        run: |
+          $assemblyInfoPath = "src/Translumo/AssemblyInfo.cs"
+          $content = Get-Content -LiteralPath $assemblyInfoPath -Raw
+          $content = $content -replace 'AssemblyFileVersion\("[^"]+"\)', "AssemblyFileVersion(`"$env:RELEASE_VERSION`")"
+          $content = $content -replace 'AssemblyInformationalVersion\("[^"]+"\)', "AssemblyInformationalVersion(`"$env:RELEASE_VERSION`")"
+          $content = $content -replace 'AssemblyVersion\("[^"]+"\)', "AssemblyVersion(`"$env:RELEASE_VERSION`")"
+          Set-Content -LiteralPath $assemblyInfoPath -Value $content -Encoding UTF8
+
+      - name: Publish Windows x64 package
+        shell: pwsh
+        run: |
+          dotnet publish $env:PROJECT_PATH `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -o $env:PUBLISH_DIR `
+            /p:PublishSingleFile=true `
+            /p:IncludeAllContentForSelfExtract=true `
+            /p:SkipBinariesExtract=true `
+            /p:EnableLegacyOcrBinaries=false
+
+      - name: Create zip package
+        shell: pwsh
+        run: |
+          $packageRoot = Join-Path $env:PACKAGE_DIR "Translumo"
+          New-Item -ItemType Directory -Force -Path $packageRoot | Out-Null
+
+          Copy-Item -Path "$env:PUBLISH_DIR\*" -Destination $packageRoot -Recurse -Force
+          Copy-Item -LiteralPath "README.md" -Destination $packageRoot -Force
+          Copy-Item -LiteralPath "LICENSE" -Destination $packageRoot -Force
+
+          $zipPath = Join-Path "artifacts" $env:ZIP_NAME
+          Compress-Archive -Path "$packageRoot\*" -DestinationPath $zipPath -Force
+
+          $hash = Get-FileHash -LiteralPath $zipPath -Algorithm SHA256
+          $shaPath = "$zipPath.sha256"
+          "$($hash.Hash)  $env:ZIP_NAME" | Set-Content -LiteralPath $shaPath -Encoding ASCII
+
+          "ZIP_PATH=$zipPath" >> $env:GITHUB_ENV
+          "SHA_PATH=$shaPath" >> $env:GITHUB_ENV
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: Translumo-AI-${{ steps.resolve.outputs.release_version }}-win-x64
+          path: |
+            ${{ steps.resolve.outputs.zip_path }}
+            ${{ steps.resolve.outputs.sha_path }}
+          if-no-files-found: error
+
+      - name: Create or update GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notesPath = Join-Path "artifacts" "release-notes.md"
+          @"
+          ## Translumo AI $env:RELEASE_VERSION
+
+          本版本由 GitHub Actions 自动构建。
+
+          - 基于原作者 ramjke/Translumo 的二次开发版本。
+          - Windows x64 自包含便携版，下载 ZIP 解压后运行 Translumo.exe。
+          - SHA256 校验文件随 ZIP 一同上传。
+          "@ | Set-Content -LiteralPath $notesPath -Encoding UTF8
+
+          gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY *> $null
+          $releaseExists = $LASTEXITCODE -eq 0
+
+          if ($releaseExists) {
+            gh release upload $env:RELEASE_TAG $env:ZIP_PATH $env:SHA_PATH --repo $env:GITHUB_REPOSITORY --clobber
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to upload release assets."
+            }
+
+            gh release edit $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --title "Translumo AI $env:RELEASE_VERSION" --notes-file $notesPath
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to update GitHub release."
+            }
+          } else {
+            $createArgs = @(
+              "release", "create", $env:RELEASE_TAG,
+              $env:ZIP_PATH, $env:SHA_PATH,
+              "--repo", $env:GITHUB_REPOSITORY,
+              "--title", "Translumo AI $env:RELEASE_VERSION",
+              "--notes-file", $notesPath
+            )
+
+            if ($env:IS_PRERELEASE -eq "true") {
+              $createArgs += "--prerelease"
+            }
+
+            & gh @createArgs
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to create GitHub release."
+            }
+          }
+
+      - name: Write release summary
+        shell: pwsh
+        run: |
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "## Translumo AI $env:RELEASE_VERSION"
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ""
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "- Release tag: ``$env:RELEASE_TAG``"
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "- Package: ``$env:ZIP_NAME``"
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "- SHA256 file: ``$env:ZIP_NAME.sha256``"
