@@ -4,155 +4,90 @@
 <p align="center">
   <img width="670" src="https://github.com/ramjke/Translumo/assets/29047281/8985049f-ea1c-428e-94be-042ece66cb54">
 </p>
-  <h2 align="center" style="border: 0">Advanced Real-Time Screen Translator</h2>
+<h2 align="center" style="border: 0">Translumo AI 屏幕翻译器</h2>
 
-<p align="center"><strong>English</strong> | <a href="docs/README-RU.md"><strong>Русский</strong></a></p>
+<p align="center"><strong>中文</strong> | <a href="docs/README-EN.md"><strong>English</strong></a> | <a href="docs/README-RU.md"><strong>Русский</strong></a></p>
 
-## Secondary Development Notice
+## 二次开发说明
 
-This repository is a secondary development fork based on the original **[Translumo](https://github.com/ramjke/Translumo)** project by **ramjke** and its contributors. The original project ownership, copyright, license, and credit remain with the original author and contributors.
+本仓库是基于原作者 **ramjke** 的 **[Translumo](https://github.com/ramjke/Translumo)** 项目进行的二次开发版本。原项目的所有权、版权、许可证、贡献记录与项目归属仍属于原作者和原项目贡献者。
 
-The changes in this fork focus on AI-based text recognition and OpenAI-compatible translation workflows, including separate AI OCR/translation configuration, frozen screenshot selection, runtime diagnostics, logging, and Chinese localization improvements.
+本分支的修改重点是将屏幕文字识别和翻译流程改造为 OpenAI 兼容的 AI 工作流，并补充中文本地化、运行日志、截图诊断和更适合单次选区翻译的交互方式。
 
-## Changes in This Fork
+当前英文 README 已移动到 [docs/README-EN.md](docs/README-EN.md)，根目录 README 优先展示中文内容。
 
-- Replaced the local OCR workflow with AI image text recognition through OpenAI-compatible Chat Completions APIs.
-- Split AI OCR and AI translation into separate Base URL, API key, model, timeout, and prompt settings.
-- Kept legacy translators available, while AI translation can be selected as the primary translator.
-- Simplified translation to a single manual workflow: press **Shift+F**, freeze the current screen, select an area on the frozen image, then run OCR and translation once.
-- Added screenshot diagnostics under the system temp directory, runtime logs in Settings, Chinese localization, and prompt reset controls.
+## 本分支主要变化
 
-## How to Use This Fork
+- 使用 AI 图片文字识别替代原有本地 OCR 识别流程。
+- 将 AI OCR 识图配置与 AI 文本翻译配置完全分离，分别拥有 Base URL、API Key、模型、超时和提示词。
+- 保留 DeepL、Google、Yandex、Papago 等原有翻译器的手动选择能力。
+- 新增 OpenAI 兼容 AI 翻译器，文本翻译请求会使用 `<text>...</text>` 标签严格限定待翻译内容。
+- 移除连续翻译模式，只保留 `Shift+F` 单次选区并翻译。
+- `Shift+F` 会先冻结鼠标所在屏幕，再在冻结截图上选区，避免悬浮文本在鼠标移开后消失。
+- 每次截图会归档到系统临时目录，便于检查 OCR 输入图片。
+- 设置页新增运行日志页面，可查看截图、OCR、翻译等关键步骤的诊断信息。
+- 补充中文本地化，并为 OCR 提示词和翻译提示词增加恢复默认按钮。
 
-1. Open Settings with **Alt+G**.
-2. In language/translation settings, configure source language, target language, AI text recognition, and AI translation.
-3. Fill the OpenAI-compatible Base URL, API key, and model separately for OCR and translation.
-4. Press **Shift+F** while the desired text is visible. Translumo freezes the current mouse screen first, then lets you select an area on that frozen image.
-5. The selected crop is sent to AI OCR. The recognized text is then sent to the selected translator.
+## 使用方式
 
-## Sibling Project
-This project has a sibling called **[Lookupper](https://lookupper.com)** — an on-screen dictionary for language learning. It is similar to Translumo but built for a different purpose. Lookupper is built to help you *learn* a language, not just depend on a translator forever.
+1. 启动 Translumo 后，按 `Alt+G` 打开设置窗口。
+2. 在语言与翻译设置中选择源语言和目标语言。
+3. 在 `AI text recognition` 区域配置 OCR 用的 OpenAI 兼容 Base URL、API Key 和模型。
+4. 如果翻译器选择 `AI`，在 `AI translation` 区域配置文本翻译用的 Base URL、API Key 和模型。
+5. 当屏幕上出现需要翻译的文本时，按 `Shift+F`。
+6. 程序会先冻结鼠标所在屏幕，在冻结画面上框选区域后，只执行一次 OCR 与翻译。
+7. 识别后的文字会送入当前选择的翻译器，翻译结果显示在翻译窗口中。
 
-Lookupper is my commercial project with a free version. If you find it useful and decide to grab the Pro version, you'll also be supporting the development of both Lookupper and Translumo.
+## AI 接口说明
 
+AI OCR 与 AI 翻译都使用 OpenAI 兼容接口：
 
-<a href="https://lookupper.com">
-<img width="300" alt="Lookupper" src="https://github.com/user-attachments/assets/ef2f83b3-e15f-4bd3-826e-858266f36c93" />
-</a>
+- `GET {baseUrl}/models` 用于获取模型列表。
+- `POST {baseUrl}/chat/completions` 用于 OCR 识图或文本翻译。
+- `baseUrl` 需要包含版本前缀，例如 `https://api.example.com/v1`。
+- API Key 通过 `Authorization: Bearer {apiKey}` 发送。
+- OCR 请求会发送 PNG data URL 图片，不会在日志中记录完整 base64 内容。
+- 翻译请求会把待翻译文本包裹在 `<text>...</text>` 中，避免远端提示词后处理误翻译无关内容。
 
+## 日志与截图诊断
 
-## Download Translumo
+设置页左侧的“日志”页面会显示当前进程内最近的运行日志，包括截图、图片尺寸、模型、请求耗时、HTTP 状态码、OCR 文本和翻译文本等信息。
 
-**Direct download link to the latest version:**  
-[Translumo_1.0.2.zip](https://github.com/ramjke/Translumo/releases/download/v.1.0.2/Translumo_1.0.2.zip)   
-After downloading, unzip the archive and run `Translumo.exe`.
+截图诊断文件保存在系统临时目录：
 
-Version 1.0.x includes many changes and improvements compared to versions 0.9.x. You can view the full list of updates on the [Releases page](https://github.com/ramjke/Translumo/releases). 
+```text
+%TEMP%\Translumo\Screenshots
+```
 
-## Main Features
+程序最多保留最近 5 次触发的冻结全屏图与 OCR 裁剪图，方便确认实际发送给 OCR 的图片内容。
 
-- **High text recognition precision**  
-  Translumo allows combining multiple OCR engines simultaneously. It uses a machine learning model to score each OCR result and selects the best one.  
+## 构建
 
-  <p align="center">
-    <img width="740" src="https://github.com/ramjke/Translumo/assets/29047281/649e5fab-a5de-4c54-a3d8-f7ea95b8f218">
-  </p>
+推荐使用 Visual Studio 2022，并安装 .NET 桌面开发工作负载和 .NET 8 SDK。
 
-- **Game oriented**  
-  Designed for real-time translation in PC games, but works anywhere on the screen with any application.
+也可以在仓库根目录运行：
 
-- **Low latency**  
-  Several optimizations reduce system impact and minimize latency between text appearance and translation.
+```powershell
+dotnet build Translumo.sln -c Debug /p:SkipBinariesExtract=true
+```
 
-- **Integrated modern OCR engines**: Windows OCR (recommended), Tesseract 5.2 (legacy), EasyOCR (legacy)
+## 系统要求
 
-- **Available translators**: DeepL (recommended), Google Translate, Yandex Translate, Naver Papago.
+- Windows 10 version 2004 build 19041 或更高版本，或 Windows 11。
+- 支持 DirectX 11 的显卡。
+- 建议至少 2 GB RAM。
+- 使用 AI OCR 和 AI 翻译时，需要可访问的 OpenAI 兼容 API 服务。
 
-- **Supported recognition languages**: English, Russian, Japanese, Chinese (Simplified), Korean.
+## 原项目能力
 
-- **Supported translation languages**: English, Russian, Japanese, Chinese (Simplified), Korean, French, Spanish, German, Portuguese, Italian, Vietnamese, Thai, Turkish, Arabic, Greek, Brazilian Portuguese, Polish, Belarusian, Persian, Indonesian, Bulgarian, Czech, Danish, Estonian, Finnish, Hungarian, Lithuanian, Latvian, Dutch, Romanian, Slovak, Slovenian, Swedish, Ukrainian.
+Translumo 原项目面向 PC 游戏和屏幕内容翻译场景，提供屏幕取词、翻译窗口覆盖显示、多翻译器支持和多语言界面等能力。
 
-## System Requirements
+原项目支持的翻译器包括 DeepL、Google Translate、Yandex Translate、Naver Papago。本分支在此基础上增加 AI 翻译，并改造 OCR 流程为 AI 图片文字识别。
 
-### Minimal requirements to use Tesseract and Windows OCR
-- Windows 10 version 2004 (build 19041) or later, or Windows 11
-- DirectX 11 compatible GPU
-- 2 GB RAM
+## 原项目与致谢
 
-### Minimal requirements to use EasyOCR
-- NVIDIA GPU with CUDA SDK 11.8 support (GTX 750, 8xxM, 9xx series or newer)
-- 8 GB RAM
-- At least 5 GB of free storage space
+- 原项目：[ramjke/Translumo](https://github.com/ramjke/Translumo)
+- 原作者：**ramjke** 与 Translumo 贡献者
+- 许可证：Apache License 2.0
 
-## How to Use
-
-![Preview](https://github.com/ramjke/Translumo/blob/7f4a73ffba0e5a0090ea0bfc3d72acb99832a0f4/docs/preview-EN.gif)
-
-1. Open the Settings (**Alt+G**)
-2. Select languages: source language for OCR and translation language
-3. Select text recognition engines (see Usage Tips for recommended modes)
-4. Define the capture area: press **Alt+Q** and select an area on the screen
-5. Run translation (press **~**)
-
-### Recommended OCR Engines
-
-- It is recommended to use **WindowsOCR** only.
-
-Tesseract is old, slow, and produces many errors.  
-EasyOCR is even slower, requires significant resources (including a specific GPU), and often leads to bugs.  
-
-It’s probably better to remove all other OCR engines and keep only WindowsOCR, but they are still included in Translumo for historical reasons.
-
-### Select Minimum Capture Area
-Reducing the capture area decreases the chance of picking up random letters from the background. Larger frames take longer to process.
-
-### Use Proxy List to Avoid Blocking by Translation Services
-Some translators may block clients sending many requests. Configure personal or shared IPv4 proxies (1-2 is usually enough) under **Languages → Proxy tab**. The app will alternate proxies to reduce requests from a single IP.
-
-### Use Borderless or Windowed Modes in Games (Not Fullscreen)
-These modes are required for correct translation overlay display. If your game does not support them, use tools like [Borderless Gaming](https://github.com/Codeusa/Borderless-Gaming).
-
-## FAQ
-
-**Q: I get "Failed to capture screen" or nothing happens after translation starts**  
-A: Ensure the target window is active. Restart Translumo or reopen the target window if needed.
-
-**Q: Borderless/windowed mode is set, but the translation window is under the game**  
-A: With the game running and focused, press the hotkey (**Alt+T** by default) to hide and show the translation window.
-
-**Q: EasyOCR package download failed**  
-A: Try reinstalling while connected to a VPN.
-
-**Q: Hotkeys don't work**  
-A: Other applications may be intercepting hotkeys.
-
-**Q: Text detection failed (TesseractOCREngine)**  
-A: Ensure the application path contains only Latin letters.
-
-## Build
-
-*Visual Studio 2022 and .NET 8 SDK are required.*
-
-1. Clone the repository (the **master** branch always corresponds to the latest release):
-
-    ```bash
-    git clone https://github.com/ramjke/Translumo.git
-    ```
-
-> Note: During the build, **binaries_extract.bat** will automatically download and extract models and Python binaries (~400 MB) to the target output directory.
-
-## Credits
-
-- [Material Design In XAML Toolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)  
-- [Tesseract .NET wrapper](https://github.com/charlesw/tesseract)  
-- [OpenCvSharp](https://github.com/shimat/opencvsharp)  
-- [Python.NET](https://github.com/pythonnet/pythonnet)  
-- [EasyOCR](https://github.com/JaidedAI/EasyOCR)  
-- [Silero TTS](https://github.com/snakers4/silero-models)  
-
-## Alternative Solutions
-
-- [Lookupper](https://lookupper.com) — on-screen dictionary and translator for language learning.
-- [ScreTran](https://github.com/PavlikBender/ScreTran) — simple screen translator.
-- [ScreenTranslator](https://github.com/OneMoreGres/ScreenTranslator) - screen capture, OCR and translation tool.
-
+感谢原作者和贡献者提供 Translumo 的基础项目。本仓库的所有二次开发均建立在该项目之上，并继续遵守原项目许可证。
