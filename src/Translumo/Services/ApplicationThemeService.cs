@@ -27,7 +27,22 @@ namespace Translumo.Services
             "SecondaryHueDarkForegroundBrush",
             "ErrorBrush",
             "HoverBackgroundBrush",
-            "WarningBrush"
+            "WarningBrush",
+            "ChatWindowBackgroundBrush",
+            "MaterialDesignBody",
+            "MaterialDesignBodyLight",
+            "MaterialDesignColumnHeader",
+            "MaterialDesignBackground",
+            "MaterialDesignPaper",
+            "MaterialDesignCardBackground",
+            "MaterialDesignToolBarBackground",
+            "MaterialDesignTextBoxBorder",
+            "MaterialDesignCheckBoxOff",
+            "MaterialDesignDivider",
+            "MaterialDesignSelection",
+            "MaterialDesignDarkForeground",
+            "MaterialDesignLightForeground",
+            "MaterialDesignValidationErrorBrush"
         };
 
         private readonly SystemConfiguration _systemConfiguration;
@@ -122,9 +137,7 @@ namespace Translumo.Services
         private static void ReplaceThemeDictionary(Uri themeSource, ResourceDictionary targetThemeDictionary)
         {
             var mergedDictionaries = Application.Current.Resources.MergedDictionaries;
-            var currentThemeDictionary = mergedDictionaries.FirstOrDefault(dictionary =>
-                dictionary.Source?.OriginalString.Contains("/Themes/AppTheme.", StringComparison.OrdinalIgnoreCase) == true
-                || dictionary.Source?.OriginalString.Contains("Themes/AppTheme.", StringComparison.OrdinalIgnoreCase) == true);
+            var currentThemeDictionary = GetCurrentThemeDictionary();
 
             if (currentThemeDictionary == null)
             {
@@ -136,6 +149,13 @@ namespace Translumo.Services
             mergedDictionaries.RemoveAt(currentIndex);
             targetThemeDictionary.Source = themeSource;
             mergedDictionaries.Insert(currentIndex, targetThemeDictionary);
+        }
+
+        private static ResourceDictionary GetCurrentThemeDictionary()
+        {
+            return Application.Current.Resources.MergedDictionaries.FirstOrDefault(dictionary =>
+                dictionary.Source?.OriginalString.Contains("/Themes/AppTheme.", StringComparison.OrdinalIgnoreCase) == true
+                || dictionary.Source?.OriginalString.Contains("Themes/AppTheme.", StringComparison.OrdinalIgnoreCase) == true);
         }
     }
 }

@@ -1,16 +1,34 @@
-﻿using System;
+using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using Brush = System.Drawing.Brush;
 
 namespace Translumo.MVVM.Common
 {
-    public class BoolBrushConverter : IValueConverter
+    public class BoolBrushConverter : DependencyObject, IValueConverter
     {
-        public SolidColorBrush TrueBrush { get; set; }
+        public static readonly DependencyProperty TrueBrushProperty = DependencyProperty.Register(
+            nameof(TrueBrush),
+            typeof(SolidColorBrush),
+            typeof(BoolBrushConverter));
 
-        public SolidColorBrush FalseBrush { get; set; }
+        public static readonly DependencyProperty FalseBrushProperty = DependencyProperty.Register(
+            nameof(FalseBrush),
+            typeof(SolidColorBrush),
+            typeof(BoolBrushConverter));
+
+        public SolidColorBrush TrueBrush
+        {
+            get => (SolidColorBrush)GetValue(TrueBrushProperty);
+            set => SetValue(TrueBrushProperty, value);
+        }
+
+        public SolidColorBrush FalseBrush
+        {
+            get => (SolidColorBrush)GetValue(FalseBrushProperty);
+            set => SetValue(FalseBrushProperty, value);
+        }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

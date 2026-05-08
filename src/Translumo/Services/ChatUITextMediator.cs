@@ -10,14 +10,26 @@ namespace Translumo.Services
         public event EventHandler<TranslatedEventArgs> TextRaised;
         public event EventHandler ClearTextsRaised; 
 
-        public void SendText(string text, bool successful)
+        public Guid SendText(string text, bool successful)
         {
-            TextRaised?.RaiseOnUIThread(this, new TranslatedEventArgs(text, successful ? TextTypes.Translation : TextTypes.Error));
+            return SendText(text, successful ? TextTypes.Translation : TextTypes.Error);
         }
 
-        public void SendText(string text, TextTypes textType)
+        public Guid SendText(string text, TextTypes textType)
         {
-            TextRaised?.RaiseOnUIThread(this, new TranslatedEventArgs(text, textType));
+            var textId = Guid.NewGuid();
+            TextRaised?.RaiseOnUIThread(this, new TranslatedEventArgs(textId, text, textType, ChatTextChangeKind.Add));
+            return textId;
+        }
+
+        public void AppendText(Guid textId, string text)
+        {
+            TextRaised?.RaiseOnUIThread(this, new TranslatedEventArgs(textId, text, TextTypes.Translation, ChatTextChangeKind.Append));
+        }
+
+        public void ReplaceText(Guid textId, string text, TextTypes textType)
+        {
+            TextRaised?.RaiseOnUIThread(this, new TranslatedEventArgs(textId, text, textType, ChatTextChangeKind.Replace));
         }
 
         public void ClearTexts()

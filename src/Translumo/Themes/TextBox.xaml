@@ -3,9 +3,10 @@
                     xmlns:controls="clr-namespace:Translumo.Controls">
 
     <Style TargetType="{x:Type controls:HotkeyInput}">
-        <Setter Property="Background" Value="#e5eded"></Setter>
-        <Setter Property="BorderBrush" Value="#868787"></Setter>
+        <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}"></Setter>
         <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}"></Setter>
         <Setter Property="FontWeight" Value="Bold"></Setter>
         <Setter Property="FontSize" Value="15"></Setter>
         <Setter Property="IsReadOnly" Value="True"></Setter>

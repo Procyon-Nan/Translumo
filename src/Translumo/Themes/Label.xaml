@@ -2,6 +2,7 @@
 
     <Style BasedOn="{StaticResource MaterialDesignLabel}" TargetType="{x:Type Label}">
         <Setter Property="FontSize" Value="15" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
@@ -12,6 +13,7 @@
         TargetType="{x:Type Label}">
         <Setter Property="FontStyle" Value="Italic" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
     </Style>
 
     <Style
@@ -20,6 +22,7 @@
         TargetType="{x:Type Label}">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
     </Style>
 
     <Style
@@ -28,6 +31,7 @@
         TargetType="{x:Type Label}">
         <Setter Property="FontSize" Value="17" />
         <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
     </Style>
 
     <Style
@@ -35,6 +39,7 @@
         BasedOn="{StaticResource MaterialDesignLabel}"
         TargetType="{x:Type Label}">
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
     </Style>
 
     <Style
@@ -43,6 +48,7 @@
         TargetType="Label">
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Margin" Value="4,0,0,0" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
     </Style>
 
     <Style
@@ -50,7 +56,7 @@
         BasedOn="{StaticResource MaterialDesignLabel}"
         TargetType="{x:Type Label}">
         <Setter Property="FontSize" Value="16" />
-        <Setter Property="Foreground" Value="{StaticResource PrimaryHueDarkBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
@@ -59,7 +65,7 @@
         x:Key="LightLabel"
         BasedOn="{StaticResource MaterialDesignLabel}"
         TargetType="{x:Type Label}">
-        <Setter Property="Foreground" Value="{StaticResource PrimaryHueLightBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueDarkForegroundBrush}" />
     </Style>
 
 </ResourceDictionary>

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -21,6 +22,8 @@ namespace Translumo.MVVM.Views
         private static extern bool SetWindowDisplayAffinity(IntPtr hwnd, uint affinity);
 
         private const uint WDA_EXCLUDEFROMCAPTURE = 0x11;
+        private readonly Dictionary<Guid, Paragraph> _chatParagraphs = new Dictionary<Guid, Paragraph>();
+        private readonly List<Guid> _chatParagraphOrder = new List<Guid>();
 
         public ChatWindowView()
         {
@@ -34,7 +37,18 @@ namespace Translumo.MVVM.Views
 
         private void ModelOnChatItemAdded(object sender, ChatItemAddedEventArgs e)
         {
-            AppendTextBlock(e.Text, e.TextType);
+            switch (e.ChangeKind)
+            {
+                case ChatTextChangeKind.Append:
+                    AppendToTextBlock(e.TextId, e.Text);
+                    break;
+                case ChatTextChangeKind.Replace:
+                    ReplaceTextBlock(e.TextId, e.Text, e.TextType);
+                    break;
+                default:
+                    AppendTextBlock(e.TextId, e.Text, e.TextType);
+                    break;
+            }
         }
 
         private void RemoveFirstTextBlocks(int numberBlocks)
@@ -43,21 +57,62 @@ namespace Translumo.MVVM.Views
             var toDelete = Math.Min(numberBlocks, blocksCollection.Count);
             for (var i = 0; i < toDelete; i++)
             {
+                if (_chatParagraphOrder.Count > 0)
+                {
+                    var textId = _chatParagraphOrder[0];
+                    _chatParagraphOrder.RemoveAt(0);
+                    _chatParagraphs.Remove(textId);
+                }
+
                 blocksCollection.Remove(blocksCollection.FirstBlock);
             }
         }
 
-        private void AppendTextBlock(string text, TextTypes textType)
+        private void AppendTextBlock(Guid textId, string text, TextTypes textType)
         {
-            if (string.IsNullOrEmpty(text))
-                return;
-
             rtbChat.CaretPosition = rtbChat.CaretPosition.DocumentEnd;
 
-            var paragraph = new Paragraph { LineHeight = fontTextBlockInstance.LineHeight, TextAlignment = fontTextBlockInstance.TextAlignment};
-            var run = GetRunInstance(textType).Clone(text);
-            paragraph.Inlines.Add(run);
+            var paragraph = new Paragraph
+            {
+                LineHeight = fontTextBlockInstance.LineHeight,
+                TextAlignment = fontTextBlockInstance.TextAlignment
+            };
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                paragraph.Inlines.Add(GetRunInstance(textType).Clone(text));
+            }
+
+            _chatParagraphs[textId] = paragraph;
+            _chatParagraphOrder.Add(textId);
             rtbChat.Document.Blocks.Add(paragraph);
+
+            rtbChat.ScrollToEnd();
+        }
+
+        private void AppendToTextBlock(Guid textId, string text)
+        {
+            if (string.IsNullOrEmpty(text) || !_chatParagraphs.TryGetValue(textId, out var paragraph))
+            {
+                return;
+            }
+
+            paragraph.Inlines.Add(GetRunInstance(TextTypes.Translation).Clone(text));
+            rtbChat.ScrollToEnd();
+        }
+
+        private void ReplaceTextBlock(Guid textId, string text, TextTypes textType)
+        {
+            if (!_chatParagraphs.TryGetValue(textId, out var paragraph))
+            {
+                return;
+            }
+
+            paragraph.Inlines.Clear();
+            if (!string.IsNullOrEmpty(text))
+            {
+                paragraph.Inlines.Add(GetRunInstance(textType).Clone(text));
+            }
 
             rtbChat.ScrollToEnd();
         }

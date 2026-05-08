@@ -70,7 +70,18 @@ namespace Translumo.MVVM.ViewModels
 
         private void ChatTextMediatorOnTextRaised(object sender, TranslatedEventArgs e)
         {
-            Model.AddChatItem(e.Text, e.TextType);
+            switch (e.ChangeKind)
+            {
+                case ChatTextChangeKind.Append:
+                    Model.AppendChatItem(e.TextId, e.Text);
+                    break;
+                case ChatTextChangeKind.Replace:
+                    Model.ReplaceChatItem(e.TextId, e.Text, e.TextType);
+                    break;
+                default:
+                    Model.AddChatItem(e.Text, e.TextType, e.TextId);
+                    break;
+            }
         }
 
         private void ChatTextMediatorOnClearTextsRaised(object sender, EventArgs e)

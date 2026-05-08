@@ -30,6 +30,8 @@
     <system:String x:Key="Str.Chat.CaptureFailedTemplate">截图失败：{0}</system:String>
     <system:String x:Key="Str.Chat.FrozenCaptureFailedTemplate">冻结截图失败：{0}</system:String>
     <system:String x:Key="Str.Chat.ProcessingFailedTemplate">处理失败：{0}</system:String>
+    <system:String x:Key="Str.Chat.TranslationStarted">开始翻译...</system:String>
+    <system:String x:Key="Str.Chat.TranslationFinished">翻译结束。</system:String>
     <system:String x:Key="Str.Chat.WindowLocked">翻译窗口已锁定</system:String>
     <system:String x:Key="Str.Chat.WindowUnlocked">翻译窗口已解锁</system:String>
 

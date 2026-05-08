@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -90,6 +91,7 @@ namespace Translumo.Processing
                 }
                 finally
                 {
+                    _chatTextMediator.SendText(_textLocalizer.Get("Str.Chat.TranslationFinished"), TextTypes.Info);
                     Interlocked.Exchange(ref _onceTranslationBusy, 0);
                 }
             });
@@ -97,6 +99,8 @@ namespace Translumo.Processing
 
         private async Task TranslateOnceInternal(FrozenScreenCapture frozenCapture, RectangleF selectedArea)
         {
+            _chatTextMediator.SendText(_textLocalizer.Get("Str.Chat.TranslationStarted"), TextTypes.Info);
+
             try
             {
                 if (frozenCapture == null || frozenCapture.ImageBytes == null || frozenCapture.ImageBytes.Length == 0)
@@ -188,6 +192,12 @@ namespace Translumo.Processing
 
         private async Task TranslateTextAsync(string text, Guid iterationId)
         {
+            if (_translator is IStreamingTranslator streamingTranslator)
+            {
+                await TranslateTextStreamingAsync(streamingTranslator, text, iterationId).ConfigureAwait(false);
+                return;
+            }
+
             var translation = await _translator.TranslateTextAsync(text).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(translation))
             {
@@ -205,6 +215,65 @@ namespace Translumo.Processing
                 translation,
                 translation.Length,
                 _ttsEngine.GetType().Name);
+        }
+
+        private async Task TranslateTextStreamingAsync(IStreamingTranslator streamingTranslator, string text, Guid iterationId)
+        {
+            Guid? translationTextId = null;
+            var streamedTranslationBuilder = new StringBuilder();
+
+            var translation = await streamingTranslator.TranslateTextAsync(text, delta =>
+            {
+                if (string.IsNullOrEmpty(delta))
+                {
+                    return;
+                }
+
+                streamedTranslationBuilder.Append(delta);
+                if (!translationTextId.HasValue)
+                {
+                    translationTextId = _chatTextMediator.SendText(delta, TextTypes.Translation);
+                    return;
+                }
+
+                _chatTextMediator.AppendText(translationTextId.Value, delta);
+            }).ConfigureAwait(false);
+
+            translation = NormalizeTranslatedText(translation);
+            if (string.IsNullOrWhiteSpace(translation))
+            {
+                _logger.LogInformation("Translation skipped: iterationId={IterationId}, reason={Reason}, sourceText={SourceText}",
+                    iterationId,
+                    "translator returned no text",
+                    text);
+                return;
+            }
+
+            if (translationTextId.HasValue)
+            {
+                var streamedTranslation = NormalizeTranslatedText(streamedTranslationBuilder.ToString());
+                if (!string.Equals(streamedTranslation, translation, StringComparison.Ordinal))
+                {
+                    _chatTextMediator.ReplaceText(translationTextId.Value, translation, TextTypes.Translation);
+                }
+            }
+            else
+            {
+                _chatTextMediator.SendText(translation, true);
+            }
+
+            _ttsEngine.SpeechText(translation);
+            _logger.LogInformation("Streaming translation delivered: iterationId={IterationId}, translatedText={TranslatedText}, translatedLength={TranslatedLength}, streamedLength={StreamedLength}, ttsEngine={TtsEngine}",
+                iterationId,
+                translation,
+                translation.Length,
+                streamedTranslationBuilder.Length,
+                _ttsEngine.GetType().Name);
+        }
+
+        private static string NormalizeTranslatedText(string text)
+        {
+            return text?.Trim() ?? string.Empty;
         }
 
         private string NormalizeRecognizedText(string text)

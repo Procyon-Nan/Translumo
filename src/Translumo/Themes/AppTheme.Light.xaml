@@ -19,4 +19,20 @@
     <SolidColorBrush x:Key="ErrorBrush" Color="#f03a16" />
     <SolidColorBrush x:Key="HoverBackgroundBrush" Color="#ebf5f7" />
     <SolidColorBrush x:Key="WarningBrush" Color="#ffdad6" />
+    <SolidColorBrush x:Key="ChatWindowBackgroundBrush" Color="#03000000" />
+
+    <SolidColorBrush x:Key="MaterialDesignBody" Color="#101418" />
+    <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="#44545c" />
+    <SolidColorBrush x:Key="MaterialDesignColumnHeader" Color="#101418" />
+    <SolidColorBrush x:Key="MaterialDesignBackground" Color="#fbffff" />
+    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#fbffff" />
+    <SolidColorBrush x:Key="MaterialDesignCardBackground" Color="#fbffff" />
+    <SolidColorBrush x:Key="MaterialDesignToolBarBackground" Color="#fbffff" />
+    <SolidColorBrush x:Key="MaterialDesignTextBoxBorder" Color="#95c4cc" />
+    <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="#101418" />
+    <SolidColorBrush x:Key="MaterialDesignDivider" Color="#d8e5e8" />
+    <SolidColorBrush x:Key="MaterialDesignSelection" Color="#c7f7ff" />
+    <SolidColorBrush x:Key="MaterialDesignDarkForeground" Color="#101418" />
+    <SolidColorBrush x:Key="MaterialDesignLightForeground" Color="#101418" />
+    <SolidColorBrush x:Key="MaterialDesignValidationErrorBrush" Color="#f03a16" />
 </ResourceDictionary>

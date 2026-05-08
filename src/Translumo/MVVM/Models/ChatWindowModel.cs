@@ -30,14 +30,27 @@ namespace Translumo.MVVM.Models
             this._chatItemsCount = 0;
         }
 
-        public void AddChatItem(string text, TextTypes textType)
+        public Guid AddChatItem(string text, TextTypes textType, Guid? textId = null)
         {
-            ChatItemAdded?.Invoke(this, new ChatItemAddedEventArgs(text, textType));
+            var actualTextId = textId ?? Guid.NewGuid();
+            ChatItemAdded?.Invoke(this, new ChatItemAddedEventArgs(actualTextId, text, textType, ChatTextChangeKind.Add));
             _chatItemsCount++;
             if (CHAT_MAX_ITEMS < _chatItemsCount)
             {
                 RemoveFirstChatItems(_chatItemsCount - CHAT_MAX_ITEMS + CHAT_ITEMS_BUFFER);
             }
+
+            return actualTextId;
+        }
+
+        public void AppendChatItem(Guid textId, string text)
+        {
+            ChatItemAdded?.Invoke(this, new ChatItemAddedEventArgs(textId, text, TextTypes.Translation, ChatTextChangeKind.Append));
+        }
+
+        public void ReplaceChatItem(Guid textId, string text, TextTypes textType)
+        {
+            ChatItemAdded?.Invoke(this, new ChatItemAddedEventArgs(textId, text, textType, ChatTextChangeKind.Replace));
         }
 
         public void ClearAllChatItems()

@@ -30,6 +30,8 @@
     <system:String x:Key="Str.Chat.CaptureFailedTemplate">Не удалось захватить экран: {0}</system:String>
     <system:String x:Key="Str.Chat.FrozenCaptureFailedTemplate">Не удалось зафиксировать экран: {0}</system:String>
     <system:String x:Key="Str.Chat.ProcessingFailedTemplate">Ошибка обработки: {0}</system:String>
+    <system:String x:Key="Str.Chat.TranslationStarted">Перевод начат...</system:String>
+    <system:String x:Key="Str.Chat.TranslationFinished">Перевод завершен.</system:String>
     <system:String x:Key="Str.Chat.WindowLocked">Окно перевода заблокировано</system:String>
     <system:String x:Key="Str.Chat.WindowUnlocked">Окно перевода разблокировано</system:String>
 

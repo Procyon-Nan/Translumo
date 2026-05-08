@@ -42,7 +42,7 @@
         <RichTextBox
             x:Name="rtbChat"
             Padding="10"
-            Background="#03000000"
+            Background="{DynamicResource ChatWindowBackgroundBrush}"
             BorderThickness="0,0,0,0"
             Focusable="false"
             FontSize="15"
@@ -63,12 +63,12 @@
             <Run
                 Name="fontRunErrorInstance"
                 FontSize="14"
-                Foreground="{StaticResource ErrorBrush}" />
+                Foreground="{DynamicResource ErrorBrush}" />
             <Run
                 Name="fontRunInfoInstance"
                 FontSize="14"
                 FontStyle="Italic"
-                Foreground="{StaticResource PrimaryHueMidBrush}" />
+                Foreground="{DynamicResource PrimaryHueMidBrush}" />
         </TextBlock>
     </Grid>
 </Window>

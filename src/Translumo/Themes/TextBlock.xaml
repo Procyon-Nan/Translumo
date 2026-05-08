@@ -5,6 +5,7 @@
         BasedOn="{StaticResource MaterialDesignTextBlock}"
         TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 

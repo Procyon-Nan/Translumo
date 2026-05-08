@@ -7,7 +7,7 @@ using Translumo.Translation.Exceptions;
 
 namespace Translumo.Translation.AI
 {
-    public sealed class AiTranslator : ITranslator
+    public sealed class AiTranslator : IStreamingTranslator
     {
         private readonly TranslationConfiguration _configuration;
         private readonly LanguageDescriptor _sourceLangDescriptor;
@@ -26,8 +26,14 @@ namespace Translumo.Translation.AI
 
         public async Task<string> TranslateTextAsync(string sourceText)
         {
+            return await TranslateTextAsync(sourceText, null).ConfigureAwait(false);
+        }
+
+        public async Task<string> TranslateTextAsync(string sourceText, Action<string> onDelta)
+        {
             if (_sourceLangDescriptor.Language == _targetLangDescriptor.Language)
             {
+                onDelta?.Invoke(sourceText ?? string.Empty);
                 return sourceText;
             }
 
@@ -48,12 +54,13 @@ namespace Translumo.Translation.AI
                     userPrompt,
                     sourceText ?? string.Empty);
 
-                var translation = await _client.TranslateAsync(
+                var translation = await _client.TranslateStreamAsync(
                     _configuration.AiTranslationBaseUrl,
                     _configuration.AiTranslationApiKey,
                     _configuration.AiTranslationModel,
                     systemPrompt,
                     userPrompt,
+                    onDelta,
                     _configuration.AiTranslationRequestTimeoutSeconds).ConfigureAwait(false);
 
                 _logger.LogInformation("AI translation result received: sourceLanguage={SourceLanguage}, targetLanguage={TargetLanguage}, translationModel={TranslationModel}, translatedText={TranslatedText}, translatedLength={TranslatedLength}",

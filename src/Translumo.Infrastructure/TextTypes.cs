@@ -8,4 +8,13 @@
 
         Error = 3
     }
+
+    public enum ChatTextChangeKind : byte
+    {
+        Add = 1,
+
+        Append = 2,
+
+        Replace = 3
+    }
 }

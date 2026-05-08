@@ -48,7 +48,7 @@
         TargetType="Button">
 
         <!--  Normal state  -->
-        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}" />
         <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
 
         <!--  Ripple effect  -->
@@ -58,7 +58,7 @@
             <!--  Hover state  -->
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
-                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueDarkForegroundBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -97,7 +97,7 @@
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
                         Background="{TemplateBinding Background}"
-                        BorderBrush="{StaticResource PrimaryHueDarkBrush}"
+                        BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <ContentPresenter
                             HorizontalAlignment="Center"
@@ -109,7 +109,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource HoverBackgroundBrush}" />
+                <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="BorderThickness" Value="2" />
@@ -139,8 +139,8 @@
 
     <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="controls:ExtendedButton">
         <Setter Property="BorderThickness" Value="0.8" />
-        <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueDarkBrush}" />
-        <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
         <Setter Property="Height" Value="35" />
         <Setter Property="Template">
             <Setter.Value>
@@ -181,7 +181,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource HoverBackgroundBrush}" />
+                <Setter Property="Background" Value="{DynamicResource HoverBackgroundBrush}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="BorderThickness" Value="2" />

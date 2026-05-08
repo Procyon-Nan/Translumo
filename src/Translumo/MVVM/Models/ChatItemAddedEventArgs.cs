@@ -5,14 +5,20 @@ namespace Translumo.MVVM.Models
 {
     public class ChatItemAddedEventArgs : EventArgs
     {
+        public Guid TextId { get; set; }
+
         public string Text { get; set; }
 
         public TextTypes TextType { get; set; }
 
-        public ChatItemAddedEventArgs(string text, TextTypes textType)
+        public ChatTextChangeKind ChangeKind { get; set; }
+
+        public ChatItemAddedEventArgs(Guid textId, string text, TextTypes textType, ChatTextChangeKind changeKind)
         {
-            this.Text = text;
-            this.TextType = textType;
+            TextId = textId;
+            Text = text;
+            TextType = textType;
+            ChangeKind = changeKind;
         }
     }
 }

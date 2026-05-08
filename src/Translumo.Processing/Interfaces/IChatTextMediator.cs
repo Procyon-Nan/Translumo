@@ -1,12 +1,17 @@
-﻿using Translumo.Infrastructure;
+using System;
+using Translumo.Infrastructure;
 
 namespace Translumo.Processing.Interfaces
 {
     public interface IChatTextMediator
     {
-        void SendText(string text, bool successful);
+        Guid SendText(string text, bool successful);
 
-        void SendText(string text, TextTypes textType);
+        Guid SendText(string text, TextTypes textType);
+
+        void AppendText(Guid textId, string text);
+
+        void ReplaceText(Guid textId, string text, TextTypes textType);
 
         void ClearTexts();
     }

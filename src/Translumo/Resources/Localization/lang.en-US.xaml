@@ -30,6 +30,8 @@
     <system:String x:Key="Str.Chat.CaptureFailedTemplate">Failed to capture screen: {0}</system:String>
     <system:String x:Key="Str.Chat.FrozenCaptureFailedTemplate">Failed to freeze screen: {0}</system:String>
     <system:String x:Key="Str.Chat.ProcessingFailedTemplate">Processing failed: {0}</system:String>
+    <system:String x:Key="Str.Chat.TranslationStarted">Translation started...</system:String>
+    <system:String x:Key="Str.Chat.TranslationFinished">Translation finished.</system:String>
     <system:String x:Key="Str.Chat.WindowLocked">Translation window has been locked</system:String>
     <system:String x:Key="Str.Chat.WindowUnlocked">Translation window has been unlocked</system:String>
 
