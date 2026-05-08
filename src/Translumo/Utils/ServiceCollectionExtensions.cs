@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Translumo.Configuration;
 using Translumo.HotKeys;
 using Translumo.Infrastructure.Encryption;
-using Translumo.OCR.Configuration;
 using Translumo.Translation.Configuration;
 using Translumo.TTS;
 
@@ -17,7 +16,6 @@ namespace Translumo.Utils
             {
                 var confStorage = new ConfigurationStorage(sc, sc.GetService<IEncryptionService>(), sc.GetService<ILogger<ConfigurationStorage>>());
                 confStorage.RegisterConfiguration<ChatWindowConfiguration>();
-                confStorage.RegisterConfiguration<OcrGeneralConfiguration>();
                 confStorage.RegisterConfiguration<TranslationConfiguration>();
                 confStorage.RegisterConfiguration<TtsConfiguration>();
                 confStorage.RegisterConfiguration<SystemConfiguration>();

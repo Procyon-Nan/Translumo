@@ -38,9 +38,6 @@
         <DataTemplate DataType="{x:Type viewModels:LanguagesSettingsViewModel}">
             <views:LanguagesSettingsView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:OcrSettingsViewModel}">
-            <views:OcrSettingsView />
-        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:LogSettingsViewModel}">
             <views:LogSettingsView />
         </DataTemplate>

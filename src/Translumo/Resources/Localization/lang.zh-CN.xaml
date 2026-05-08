@@ -91,6 +91,7 @@
     <system:String x:Key="Str.AppearanceSettings.Justify">两端对齐</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts">自动清屏</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts2">无操作后</system:String>
+    <system:String x:Key="Str.AppearanceSettings.DarkMode">深色模式</system:String>
     <system:String x:Key="Str.AppearanceSettings.Ms">ms</system:String>
 
 
@@ -101,27 +102,15 @@
     <system:String x:Key="Str.ProxySettings.Note" xml:space="preserve">使用 IPv4 代理可降低因大量请求而被翻译服务限制的概率。&#13;配置多个代理后，Translumo 会在请求之间轮换使用。</system:String>
     <system:String x:Key="Str.ProxySettings.Caption">代理列表 - 修改</system:String>
 
-
-    <!--  OCR settings  -->
-    <system:String x:Key="Str.OcrSettings.TesseractOcr">Tesseract OCR</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcr">Windows OCR</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcr">EasyOCR</system:String>
-    <system:String x:Key="Str.OcrSettings.TesseractOcrDesc" xml:space="preserve">Tesseract 5.0，采用 LSTM 模式。它是早期最流行的开源 OCR（文字识别）方案之一。&#13;&#13;适合识别纯色背景、字体较简单的文本。&#13;&#13;&lt;Bold&gt;性能影响：&lt;/Bold&gt;低</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc" xml:space="preserve">微软原生 OCR 方案。能够处理比 Tesseract 更复杂的背景。&#13;&#13;&lt;Bold&gt;性能影响：&lt;/Bold&gt;低</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc2">可能需要安装其他语言包。</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc" xml:space="preserve">Jaided AI 出品的高级开源 OCR 方案。&#13;&#13;即使面对复杂背景和特殊字体，也能提供较高的识别精度。&#13;&#13;&lt;Bold&gt;性能影响：&lt;/Bold&gt;高</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc2">需要安装额外的软件包（Python、PyTorch）。</system:String>
-
     <!--  About window  -->
-    <system:String x:Key="Str.About.MaintainedBy">共同维护者：Aleksei Vekhov</system:String>
-    <system:String x:Key="Str.About.DevelopedBy">开发者：Danil Iushkov</system:String>
+    <system:String x:Key="Str.About.MaintainedBy">原项目开发者：ramjke</system:String>
+    <system:String x:Key="Str.About.DevelopedBy">开发者：Procyon-Nan</system:String>
     <system:String x:Key="Str.About.ProjectPage">项目主页</system:String>
     <system:String x:Key="Str.About.ReportIssue">意见与反馈</system:String>
 
     <!--  Navigation menu  -->
     <system:String x:Key="Str.Navigation.Languages">语言</system:String>
     <system:String x:Key="Str.Navigation.Appearance">外观</system:String>
-    <system:String x:Key="Str.Navigation.Ocr">文字识别</system:String>
     <system:String x:Key="Str.Navigation.HotKeys">快捷键</system:String>
     <system:String x:Key="Str.Navigation.Logs">日志</system:String>
 
@@ -172,17 +161,7 @@
     <system:String x:Key="Str.Languages.Ukrainian">乌克兰文</system:String>
 
     <!--  Dialog stages  -->
-    <system:String x:Key="Str.Stages.CheckPyModules">正在检查已安装的模块...</system:String>
-    <system:String x:Key="Str.Stages.PyModulesQuestion" xml:space="preserve">所需的Python模块尚未安装。是否现在安装？&#13;此选项仅适用于NVIDIA核心的显卡！</system:String>
-    <system:String x:Key="Str.Stages.PyModulesQuestion2" xml:space="preserve">所需模块将占用约5GB的磁盘空间。&#13;安装过程可能需要几分钟到一小时。&#13;是否继续？</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule1">(1/3) 正在安装模块 “pytorch”...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule2">(2/3) 正在安装模块 “easyocr”...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule3">(3/3) 正在安装模块 “pillow”...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModuleTemplate">正在安装模块 “{0}”...</system:String>
-    <system:String x:Key="Str.Stages.PyModulesInstalled">所需模块已安装</system:String>
-    <system:String x:Key="Str.Stages.PyModulesCheckError">无法访问 Python 来检查模块</system:String>
     <system:String x:Key="Str.Stages.CheckLangPack">正在检查语言包安装情况...</system:String>
-    <system:String x:Key="Str.Stages.OCRLangPackQuestion" xml:space="preserve">Windows尚未安装语言 “{0}” 的图文识别 (OCR) 支持。&#13;是否现在安装？</system:String>
     <system:String x:Key="Str.Stages.TTSLangPackQuestion" xml:space="preserve">Windows尚未安装语言 “{0}” 的语音朗读 (TTS) 支持。&#13;是否现在安装？</system:String>
     <system:String x:Key="Str.Stages.InstallationLangPack">正在安装语言包...</system:String>
     <system:String x:Key="Str.Stages.LangPackInstalledRestart">语言包已安装，请重新启动计算机。</system:String>

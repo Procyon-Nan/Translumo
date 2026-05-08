@@ -25,6 +25,8 @@ namespace Translumo.MVVM.ViewModels
             set => SetProperty(ref _model, value);
         }
 
+        public SystemConfiguration SystemConfiguration { get; }
+
         public IList<DisplayAlignment> AvailableAlignments { get; set; }
 
         public bool ColorPickerIsOpened
@@ -56,9 +58,10 @@ namespace Translumo.MVVM.ViewModels
         private Color _selectedColor;
 
         private readonly ChatUITextMediator _chatMediator;
-        public AppearanceSettingsViewModel(ChatWindowConfiguration model, ChatUITextMediator chatMediator)
+        public AppearanceSettingsViewModel(ChatWindowConfiguration model, SystemConfiguration systemConfiguration, ChatUITextMediator chatMediator)
         {
             this.Model = model;
+            this.SystemConfiguration = systemConfiguration;
             this._chatMediator = chatMediator;
             this.AvailableAlignments = Enum.GetValues<TextAlignment>()
                 .Select(alignment => new DisplayAlignment(alignment, GetDisplayAlignmentText(alignment)))

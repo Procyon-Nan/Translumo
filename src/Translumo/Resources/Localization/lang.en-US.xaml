@@ -91,6 +91,7 @@
     <system:String x:Key="Str.AppearanceSettings.Justify">Align Text Justify</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts">Auto clear window</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts2">after inactivity</system:String>
+    <system:String x:Key="Str.AppearanceSettings.DarkMode">Dark mode</system:String>
     <system:String x:Key="Str.AppearanceSettings.Ms">ms</system:String>
 
 
@@ -101,27 +102,15 @@
     <system:String x:Key="Str.ProxySettings.Note" xml:space="preserve">Use IPv4 proxy to avoid block by translation services with a large number of simultaneous requests.&#13;The app will allocate the proxy address pool between requests.</system:String>
     <system:String x:Key="Str.ProxySettings.Caption">Proxy list — change</system:String>
 
-
-    <!--  OCR settings  -->
-    <system:String x:Key="Str.OcrSettings.TesseractOcr">Tesseract OCR</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcr">Windows OCR</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcr">EasyOCR</system:String>
-    <system:String x:Key="Str.OcrSettings.TesseractOcrDesc" xml:space="preserve">Tesseract 5.0 with LSTM mode. One of the most popular early open-source OCR solution.&#13;Consistently recognizes text with simple solid background.&#13;&lt;Bold&gt;Performance impact:&lt;/Bold&gt; low</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc" xml:space="preserve">Native OCR solution by Microsoft. Able to handle a more complex background then Tesseract.&#13;&lt;Bold&gt;Performance impact:&lt;/Bold&gt; minor</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc2">Additional language packs may need to be installed</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc" xml:space="preserve">The most advanced open-source OCR solution by Jaided AI.&#13;High precision of text recognition even with a complex background and uncommon fonts.&#13;&lt;Bold&gt;Performance impact:&lt;/Bold&gt; high</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc2">Installation additional packages (Python, PyTorch) is required</system:String>
-
     <!--  About window  -->
-    <system:String x:Key="Str.About.MaintainedBy">Owner and Maintainer Aleksei Vekhov</system:String>
-    <system:String x:Key="Str.About.DevelopedBy">Author Danil Iushkov</system:String>
+    <system:String x:Key="Str.About.MaintainedBy">Original developer: ramjke</system:String>
+    <system:String x:Key="Str.About.DevelopedBy">Developer: Procyon-Nan</system:String>
     <system:String x:Key="Str.About.ProjectPage">Project page</system:String>
     <system:String x:Key="Str.About.ReportIssue">Report an issue</system:String>
 
     <!--  Navigation menu  -->
     <system:String x:Key="Str.Navigation.Languages">Languages</system:String>
     <system:String x:Key="Str.Navigation.Appearance">Appearance</system:String>
-    <system:String x:Key="Str.Navigation.Ocr">Text recognition</system:String>
     <system:String x:Key="Str.Navigation.HotKeys">Hotkeys</system:String>
     <system:String x:Key="Str.Navigation.Logs">Logs</system:String>
 
@@ -172,17 +161,7 @@
     <system:String x:Key="Str.Languages.Ukrainian">Ukrainian</system:String>
 
     <!--  Dialog stages  -->
-    <system:String x:Key="Str.Stages.CheckPyModules">Checking installed modules...</system:String>
-    <system:String x:Key="Str.Stages.PyModulesQuestion" xml:space="preserve">Required Python modules are not installed. Do you want to install it now?&#13;Option is available only for NVIDIA GPUs!</system:String>
-    <system:String x:Key="Str.Stages.PyModulesQuestion2" xml:space="preserve">Required modules will take up ~5gb of disk space.&#13;Installation can take from a few minutes to an hour.&#13;Do you want to proceed?</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule1">(1/3) Installation 'pytorch' module...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule2">(2/3) Installation 'easyocr' module...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule3">(3/3) Installation 'pillow' module...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModuleTemplate">Installation '{0}' module...</system:String>
-    <system:String x:Key="Str.Stages.PyModulesInstalled">Required modules are installed</system:String>
-    <system:String x:Key="Str.Stages.PyModulesCheckError">Couldn't get access to Python for checking modules</system:String>
     <system:String x:Key="Str.Stages.CheckLangPack">Checking language pack installation...</system:String>
-    <system:String x:Key="Str.Stages.OCRLangPackQuestion" xml:space="preserve">Text recognition (OCR) for the language '{0}' is not installed on Windows.&#13;Do you want to install it now?</system:String>
     <system:String x:Key="Str.Stages.TTSLangPackQuestion" xml:space="preserve">Text-to-speech (TTS) for the language '{0}' is not installed on Windows.&#13;Do you want to install it now?</system:String>
     <system:String x:Key="Str.Stages.InstallationLangPack">Installation language pack...</system:String>
     <system:String x:Key="Str.Stages.LangPackInstalledRestart">Language pack has been installed. Please restart computer</system:String>

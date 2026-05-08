@@ -30,13 +30,13 @@ namespace Translumo.Utils
 
         static LocalizationManager()
         {
-            Thread.CurrentThread.CurrentUICulture = GetSupportedCultureOrDefault(CultureInfo.CurrentUICulture);
+            Thread.CurrentThread.CurrentUICulture = GetDefaultCulture();
             ChangedValueCallbacks = new Dictionary<string, CallbackContext>();
         }
 
         public static string GetDefaultCultureName()
         {
-            return GetSupportedCultureOrDefault(CultureInfo.CurrentUICulture).Name;
+            return GetDefaultCulture().Name;
         }
 
 
@@ -109,7 +109,12 @@ namespace Translumo.Utils
                 return supportedCulture;
             }
 
-            return AvailableLocalizations.First(lang => lang.Name == "en-US");
+            return GetDefaultCulture();
+        }
+
+        private static CultureInfo GetDefaultCulture()
+        {
+            return AvailableLocalizations.First(lang => lang.Name == "zh-CN");
         }
 
 

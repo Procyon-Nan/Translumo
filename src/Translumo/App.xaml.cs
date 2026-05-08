@@ -5,25 +5,20 @@ using Serilog.Core;
 using Serilog.Events;
 using SharpDX.XInput;
 using System;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Threading;
 using Translumo.Configuration;
 using Translumo.Dialog;
 using Translumo.HotKeys;
-using Translumo.Infrastructure.Constants;
 using Translumo.Infrastructure.Dispatching;
 using Translumo.Infrastructure.Encryption;
 using Translumo.Infrastructure.Language;
 using Translumo.Logging;
 using Translumo.MVVM.Models;
 using Translumo.MVVM.ViewModels;
-using Translumo.OCR.Configuration;
 using Translumo.Processing;
 using Translumo.Processing.Configuration;
 using Translumo.Processing.Interfaces;
-using Translumo.Processing.TextProcessing;
 using Translumo.Services;
 using Translumo.Translation;
 using Translumo.Translation.Configuration;
@@ -55,26 +50,6 @@ namespace Translumo
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         }
 
-        private void CheckIfPathsIsASCII()
-        {
-            string pythonPath = Global.PythonPath;
-
-            // Extract non-English characters (non-ASCII)
-            string nonAscii = new string(pythonPath.Where(c => c > 127).ToArray());
-
-            if (!string.IsNullOrEmpty(nonAscii))
-            {
-                // Show native Win32 dialog
-                NativeDialog.ShowError(
-                    $"Translumo folder is in a path with non-English letters: \"{nonAscii}\"\n" +
-                    "Please move Translumo folder to a simple path like C:\\Translumo",
-                    "Move Translumo Folder");
-
-                // Stop the app
-                Environment.Exit(1);
-            }
-        }
-
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             _logger.LogCritical(e.ExceptionObject as Exception, "Unhandled app exception");
@@ -100,6 +75,8 @@ namespace Translumo
             var configurationStorage = _serviceProvider.GetService<ConfigurationStorage>();
             configurationStorage.LoadConfiguration();
 
+            _serviceProvider.GetService<ApplicationThemeService>()?.ApplyCurrentTheme();
+
             var chatViewModel = _serviceProvider.GetService<ChatWindowViewModel>();
             var dialogService = _serviceProvider.GetService<DialogService>();
             dialogService.ShowWindowAsync(chatViewModel);
@@ -118,7 +95,6 @@ namespace Translumo
             services.AddScoped<LogSettingsViewModel>();
 
             var chatWindowConfiguration = ChatWindowConfiguration.Default;
-            services.AddSingleton<OcrGeneralConfiguration>(OcrGeneralConfiguration.Default);
             services.AddSingleton<TranslationConfiguration>(TranslationConfiguration.Default);
             services.AddSingleton<TtsConfiguration>(TtsConfiguration.Default);
             services.AddSingleton<ChatWindowConfiguration>(chatWindowConfiguration);
@@ -126,6 +102,7 @@ namespace Translumo
             services.AddSingleton<SystemConfiguration>(SystemConfiguration.Default);
             services.AddSingleton<TextProcessingConfiguration>(chatWindowConfiguration.TextProcessing);
             services.AddSingleton(RuntimeLogStore.Instance);
+            services.AddSingleton<ApplicationThemeService>();
 
             var chatMediatorInstance = new ChatUITextMediator();
             services.AddSingleton<IChatTextMediator, ChatUITextMediator>(provider => chatMediatorInstance);
@@ -174,18 +151,4 @@ namespace Translumo
 
     }
 
-    public static class NativeDialog
-    {
-        private const int MB_OK = 0x0;
-        private const int MB_ICONERROR = 0x10;
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern int MessageBoxW(IntPtr hWnd, string lpText, string lpCaption, uint uType);
-
-        public static void ShowError(string message, string title = "Error")
-        {
-            // hWnd = IntPtr.Zero means no owner window
-            MessageBoxW(IntPtr.Zero, message, title, MB_OK | MB_ICONERROR);
-        }
-    }
 }

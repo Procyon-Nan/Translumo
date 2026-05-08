@@ -7,7 +7,8 @@ namespace Translumo.Configuration
     {
         public static SystemConfiguration Default => new SystemConfiguration()
         {
-            ApplicationCulture = LocalizationManager.GetDefaultCultureName()
+            ApplicationCulture = LocalizationManager.GetDefaultCultureName(),
+            DarkModeEnabled = false
         };
 
         public string ApplicationCulture
@@ -21,6 +22,14 @@ namespace Translumo.Configuration
         }
 
         private string _applicationCulture;
+
+        public bool DarkModeEnabled
+        {
+            get => _darkModeEnabled;
+            set => SetProperty(ref _darkModeEnabled, value);
+        }
+
+        private bool _darkModeEnabled;
 
         private void UpdateSelectedLanguage()
         {

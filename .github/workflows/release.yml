@@ -105,9 +105,7 @@ jobs:
             --self-contained true `
             -o $env:PUBLISH_DIR `
             /p:PublishSingleFile=true `
-            /p:IncludeAllContentForSelfExtract=true `
-            /p:SkipBinariesExtract=true `
-            /p:EnableLegacyOcrBinaries=false
+            /p:IncludeAllContentForSelfExtract=true
 
       - name: Create zip package
         shell: pwsh

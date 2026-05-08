@@ -91,6 +91,7 @@
     <system:String x:Key="Str.AppearanceSettings.Justify">Выравнивать текст по ширине</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts">Автоочистка окна</system:String>
     <system:String x:Key="Str.AppearanceSettings.AutoClearTexts2">после бездействия</system:String>
+    <system:String x:Key="Str.AppearanceSettings.DarkMode">Темная тема</system:String>
     <system:String x:Key="Str.AppearanceSettings.Ms">мс</system:String>
 
     <!--  Proxy settings  -->
@@ -100,27 +101,15 @@
     <system:String x:Key="Str.ProxySettings.Note" xml:space="preserve">Используйте IPv4 прокси чтобы избежать блокировки со стороны сервисов перевода за множественные запросы.&#13;Приложение будет равномерно использовать пул доступных прокси между запросами.</system:String>
     <system:String x:Key="Str.ProxySettings.Caption">Список прокси — изменить</system:String>
 
-
-    <!--  OCR settings  -->
-    <system:String x:Key="Str.OcrSettings.TesseractOcr">Tesseract OCR</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcr">Windows OCR</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcr">EasyOCR</system:String>
-    <system:String x:Key="Str.OcrSettings.TesseractOcrDesc" xml:space="preserve">Tesseract 5.0 в LSTM режиме. Одно из самых популярных и ранних open-source OCR решений.&#13;Стабильно определяет текст с простым шрифтом и идеальным однотонным фоном.&#13;&lt;Bold&gt;Влияние на производительность:&lt;/Bold&gt; небольшое</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc" xml:space="preserve">Нативное OCR решение от Microsoft. Способно работать с более сложным фоном и&#13;шрифтами, чем Tesseract.&#13;&lt;Bold&gt;Влияние на производительность:&lt;/Bold&gt; минимальное</system:String>
-    <system:String x:Key="Str.OcrSettings.WindowsOcrDesc2">Необходима установка дополнительных языковых пакетов</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc" xml:space="preserve">Наиболее продвинутое open-source OCR решение от Jaided AI.&#13;Высокая точность определение даже со сложным фоном и нестандартными шрифтами.&#13;&lt;Bold&gt;Влияние на производительность:&lt;/Bold&gt; высокое</system:String>
-    <system:String x:Key="Str.OcrSettings.EasyOcrDesc2">Необходима установка дополнительных модулей (Python, PyTorch)</system:String>
-
     <!--  About window  -->
-    <system:String x:Key="Str.About.MaintainedBy">Создатель Алексей Вехов</system:String>
-    <system:String x:Key="Str.About.DevelopedBy">Автор Данил Юшков</system:String>
+    <system:String x:Key="Str.About.MaintainedBy">Ориг. разработчик: ramjke</system:String>
+    <system:String x:Key="Str.About.DevelopedBy">Разработчик: Procyon-Nan</system:String>
     <system:String x:Key="Str.About.ProjectPage">Страница проекта</system:String>
     <system:String x:Key="Str.About.ReportIssue">Сообщить о проблеме</system:String>
 
     <!--  Navigation menu  -->
     <system:String x:Key="Str.Navigation.Languages">Языки</system:String>
     <system:String x:Key="Str.Navigation.Appearance">Внешний вид</system:String>
-    <system:String x:Key="Str.Navigation.Ocr">Распознавание текста</system:String>
     <system:String x:Key="Str.Navigation.HotKeys">Горячие клавиши</system:String>
     <system:String x:Key="Str.Navigation.Logs">Журнал</system:String>
 
@@ -171,17 +160,7 @@
     <system:String x:Key="Str.Languages.Ukrainian">Украинский</system:String>
 
     <!--  Dialog stages  -->
-    <system:String x:Key="Str.Stages.CheckPyModules">Проверка установленных модулей...</system:String>
-    <system:String x:Key="Str.Stages.PyModulesQuestion" xml:space="preserve">Необходимые Python модули не установлены. Хотите установить сейчас?&#13;Опция доступна только для видеокарт NVIDIA!</system:String>
-    <system:String x:Key="Str.Stages.PyModulesQuestion2" xml:space="preserve">Дополнительные модули потребуют ~5гб свободного дискового пространства.&#13;Установка может занять от нескольких минут до часа.&#13;Хотите продолжить?</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule1">(1/3) Установка 'pytorch' модуля...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule2">(2/3) Установка 'easyocr' модуля...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModule3">(3/3) Установка 'pillow' модуля...</system:String>
-    <system:String x:Key="Str.Stages.InstallationPyModuleTemplate">Установка '{0}' модуля...</system:String>
-    <system:String x:Key="Str.Stages.PyModulesInstalled">Необходимые модули успешно установлены</system:String>
-    <system:String x:Key="Str.Stages.PyModulesCheckError">Не удалось получить доступ к Python для проверки модулей</system:String>
     <system:String x:Key="Str.Stages.CheckLangPack">Проверка установленных языковых пакетов...</system:String>
-    <system:String x:Key="Str.Stages.OCRLangPackQuestion" xml:space="preserve">Распознавание текста (OCR) для языка «{0}» не установлено в Windows.&#13;Хотите установить его сейчас?</system:String>
     <system:String x:Key="Str.Stages.TTSLangPackQuestion" xml:space="preserve">Синтез речи (TTS) для языка «{0}» не установлен в Windows.&#13;Хотите установить его сейчас?</system:String>
     <system:String x:Key="Str.Stages.InstallationLangPack">Установка языкового пакета...</system:String>
     <system:String x:Key="Str.Stages.LangPackInstalledRestart">Языковой пакет успешно установлен. Пожалуйста, перезагрузите систему.</system:String>

@@ -68,7 +68,7 @@ AI OCR 与 AI 翻译都使用 OpenAI 兼容接口：
 也可以在仓库根目录运行：
 
 ```powershell
-dotnet build Translumo.sln -c Debug /p:SkipBinariesExtract=true
+dotnet build Translumo.sln -c Debug
 ```
 
 ## 系统要求

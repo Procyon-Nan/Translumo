@@ -63,13 +63,13 @@
         <controls:ExtendedButton
             Margin="0,0,0,25"
             Caption="{StaticResource Str.About.ReportIssue}"
-            CommandParameter="https://github.com/ramjke/Translumo/issues/new"
+            CommandParameter="https://github.com/Procyon-Nan/Translumo/issues/new"
             DockPanel.Dock="Bottom"
             Style="{StaticResource ActionLinkExtendedButton}" />
         <controls:ExtendedButton
             Margin="0,0,0,6"
             Caption="{StaticResource Str.About.ProjectPage}"
-            CommandParameter="https://github.com/ramjke/Translumo"
+            CommandParameter="https://github.com/Procyon-Nan/Translumo"
             DockPanel.Dock="Bottom"
             Style="{StaticResource ActionLinkExtendedButton}" />
     </DockPanel>

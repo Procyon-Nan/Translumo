@@ -9,12 +9,6 @@ namespace Translumo.Infrastructure.Constants
     {
         public static string AppPath;
 
-        public static string PythonPath;
-
-        public static string PipPath;
-
-        public static string ModelsPath;
-
         static Global()
         {
 #if DEBUG
@@ -22,9 +16,6 @@ namespace Translumo.Infrastructure.Constants
 #else
             AppPath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
 #endif
-            PythonPath = Path.Combine(AppPath, "Python");
-            PipPath = Path.Combine(PythonPath, "Scripts/pip.exe");
-            ModelsPath = Path.Combine(AppPath, "models");
         }
 
 

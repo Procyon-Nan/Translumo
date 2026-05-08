@@ -129,6 +129,10 @@
                         Style="{StaticResource PrimaryToggleButton}" />
                     <Label Content="{DynamicResource Str.AppearanceSettings.ExcludeFromCaptue}" Style="{StaticResource ControlCaptionLabel}" />
                 </StackPanel>
+                <StackPanel Margin="0,0,0,14" Orientation="Horizontal">
+                    <ToggleButton IsChecked="{Binding SystemConfiguration.DarkModeEnabled}" Style="{StaticResource PrimaryToggleButton}" />
+                    <Label Content="{DynamicResource Str.AppearanceSettings.DarkMode}" Style="{StaticResource ControlCaptionLabel}" />
+                </StackPanel>
                 <Label Content="{DynamicResource Str.AppearanceSettings.WindowOpacity}" />
                 <Slider
                     Name="slicderFontOpacity"

@@ -6,23 +6,7 @@
 
         public string Code { get; set; }
 
-        public string TesseractCode { get; set; }
-
-        public string EasyOcrCode { get; set; }
-
         public string IsoCode { get; set; }
-
-        public string EasyOcrModel { get; set; }
-
-        public string TextScorePredictorModel { get; set; }
-
-        public string[] SupportedNamedBlocks { get; set; }
-
-        public bool UseEndPunctuation { get; set; }
-
-        public bool UseWordTokenizer { get; set; }
-
-        public bool UseSpaceRemover { get; set; }
 
         public bool TranslationOnly { get; set; } = false;
 
